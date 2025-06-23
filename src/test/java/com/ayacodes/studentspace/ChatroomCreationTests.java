@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ChatroomManagerTest {
+class ChatroomCreationTests {
 
     @Test
     void addUserToRoomSuccessful() {
@@ -13,6 +13,8 @@ class ChatroomManagerTest {
         userAlice.username = "alice";
         userAlice.topic = Topic.FRIENDS;
         Chatroom room = manager.createRoom(userAlice);
+        assertFalse(room.atCapacity);
+        assertTrue(room.isAvailable());
         assertEquals(1, room.getUsers().size());
         assertEquals("alice", room.getUsers().get(0).getUsername());
     }
@@ -31,11 +33,15 @@ class ChatroomManagerTest {
         userBob.username = "bob";
         userBob.topic = Topic.STRESS;
         assertFalse(room.addUser(userBob));
+        assertFalse(room.atCapacity);
+        assertTrue(room.isAvailable());
         assertEquals(1, room.getUsers().size());
         assertEquals("alice", room.getUsers().get(0).getUsername());
 
         userBob.topic = Topic.FRIENDS;
         assertTrue(room.addUser(userBob));
+        assertTrue(room.atCapacity);
+        assertFalse(room.isAvailable());
         assertEquals(2, room.getUsers().size());
     }
 
@@ -54,6 +60,7 @@ class ChatroomManagerTest {
         userBob.topic = Topic.FRIENDS;
         assertTrue(room.addUser(userBob));
         assertEquals(2, room.getUsers().size());
+        assertTrue(room.atCapacity);
 
         User userTom = new User();
         userTom.username = "tom";

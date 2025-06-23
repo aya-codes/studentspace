@@ -39,6 +39,7 @@ public class Chatroom {
     }
 
     public Boolean addMessage(Message message) {
+        if (message.username.isBlank() || message.body.isBlank()) return false;
         LocalDateTime timeOfRequest = LocalDateTime.now();
         message.setTimestamp(timeOfRequest);
         for (User user : users) {
