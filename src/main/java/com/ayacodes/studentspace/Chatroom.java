@@ -19,9 +19,15 @@ public class Chatroom {
         return false;
     }
 
-    public void addUser(User user) {
-        users.add(user);
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public Boolean addUser(User user) {
+        if (user.topic.equals(this.topic) && !atCapacity) users.add(user);
+        else return false;
         if (users.size() == capacity) atCapacity = true;
+        return true;
     }
 
     public String getMessageString() {
