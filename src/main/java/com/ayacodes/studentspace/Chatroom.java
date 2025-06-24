@@ -1,16 +1,27 @@
 package com.ayacodes.studentspace;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Chatroom {
-    Integer id;
-    List<User> users = new ArrayList<User>();
+    public String roomId;
+    List<User> users = new ArrayList<>();
     Integer capacity = 2;
     Boolean atCapacity = false;
     Topic topic;
     List<Message> messages = new ArrayList<>();
+    private LocalDateTime chatStartedAt;
+    //a chat starts when it reaches 2 users
+    //if I want to make group chats later,
+    //      I will have to differentiate between minimum users to start a chat and capacity reached
+    private static final Duration maxTimeOpen = Duration.ofMinutes(30);
+
+    public boolean isExpired() {
+        Duration timeElapsed = Duration.between(chatStartedAt, LocalDateTime.now());
+        return timeElapsed.compareTo(maxTimeOpen) > 0;
+    }
 
     public Boolean isAvailable() {
         if (atCapacity) return false;
@@ -26,7 +37,10 @@ public class Chatroom {
     public Boolean addUser(User user) {
         if (user.topic.equals(this.topic) && !atCapacity) users.add(user);
         else return false;
-        if (users.size() == capacity) atCapacity = true;
+        if (users.size() == capacity) {
+            atCapacity = true;
+            chatStartedAt = LocalDateTime.now();
+        }
         return true;
     }
 
@@ -53,7 +67,7 @@ public class Chatroom {
     @Override
     public String toString() {
         return "Chatroom{" +
-                "id=" + id +
+                "id=" + roomId +
                 ", users=" + users +
                 ", atCapacity=" + atCapacity +
                 ", topic=" + topic +

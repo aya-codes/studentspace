@@ -1,5 +1,7 @@
 package com.ayacodes.studentspace;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Queue;
@@ -15,30 +17,31 @@ public class ChatController {
     }
 
     @PostMapping ("/start")
-    public String matchUserToRoom(@RequestBody User user) {
-        waitingUsers.add(user);
+    public ResponseEntity<String> matchUserToRoom(@RequestBody User user) {
+        if (user.username.isBlank()) return ResponseEntity.badRequest().body("Invalid username");
+        if (!waitingUsers.add(user)) return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body("Queue is full. Please try again later.");
         Chatroom room = roomManager.findAvailableRoom(user);
-        if (room.atCapacity) {
-            waitingUsers.remove(user);
-            return "Your chatroom is ready! Its id is " + room.id;
-        }
-        return "Please hold while we find someone for you to chat with...";
+        waitingUsers.remove(user);
+        return ResponseEntity.ok("Room id: " + room.roomId);
     }
 
     @GetMapping("/chat/{roomId}")
-    public String getRoom(@PathVariable int roomId) {
+    public ResponseEntity<String> getAllMessages(@PathVariable String roomId) {
         Chatroom room = roomManager.getRoom(roomId);
-        if (room == null) return "I can't find a room with id: " + roomId;
-        if (room.messages.isEmpty()) return "No messages yet";
-        return room.getMessageString();
+        if (room.isExpired()) return ResponseEntity.status(HttpStatus.GONE).body("Room has expired");
+        if (room == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found");
+        if (room.messages.isEmpty()) return ResponseEntity.ok("No messages yet");
+        return ResponseEntity.ok(room.getMessageString());
     }
 
     @PostMapping("/chat/{roomId}")
-    public String sendMessage(@PathVariable int roomId, @RequestBody Message message) {
+    public ResponseEntity<String> sendMessage(@PathVariable String roomId, @RequestBody Message message) {
         Chatroom room = roomManager.getRoom(roomId);
-        if (room == null) return "I can't find a room with id: " + roomId;
-        if (room.addMessage(message)) return "Message sent";
-        return "Username is not familiar";
+        if (room.isExpired()) return ResponseEntity.status(HttpStatus.GONE).body("Room has expired");
+        if (room == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found");
+        if (room.addMessage(message)) return ResponseEntity.ok("Message sent");
+        return ResponseEntity.badRequest().body("Unfamiliar username");
     }
 
 }

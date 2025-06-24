@@ -4,17 +4,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class ChatroomManager {
-    private Map<Integer, Chatroom> rooms = new HashMap<>();
+    private Map<String, Chatroom> rooms = new HashMap<>();
     private static Integer nextId = 0;
 
-    public Map<Integer, Chatroom> getRooms() {
+    public Map<String, Chatroom> getRooms() {
         return rooms;
     }
 
-    public Chatroom getRoom(int id) {
+    public Chatroom getRoom(String id) {
         return rooms.get(id);
     }
 
@@ -29,9 +30,9 @@ public class ChatroomManager {
 
     public Chatroom createRoom(User user) {
         Chatroom newRoom = new Chatroom();
-        newRoom.id = nextId++;
+        String roomId = UUID.randomUUID().toString();
         newRoom.topic = user.topic;
-        rooms.put(newRoom.id, newRoom);
+        rooms.put(newRoom.roomId, newRoom);
         return addUserToRoom(newRoom, user);
     }
 
