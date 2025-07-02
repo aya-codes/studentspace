@@ -1,18 +1,26 @@
 package com.ayacodes.studentspace;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class ChatroomManager {
     private Map<String, Chatroom> rooms = new HashMap<>();
-    private static Integer nextId = 0;
 
     public Map<String, Chatroom> getRooms() {
         return rooms;
+    }
+
+    public void removeRoom(String id) {
+        rooms.remove(id);
+    }
+
+    @Scheduled(fixedRate = 300000) // every 5 minutes
+    public void removeExpiredRooms() {
+        rooms.entrySet().removeIf(entry -> entry.getValue().isExpired());
     }
 
     public Chatroom getRoom(String id) {
@@ -30,7 +38,6 @@ public class ChatroomManager {
 
     public Chatroom createRoom(User user) {
         Chatroom newRoom = new Chatroom();
-        String roomId = UUID.randomUUID().toString();
         newRoom.topic = user.topic;
         rooms.put(newRoom.roomId, newRoom);
         return addUserToRoom(newRoom, user);

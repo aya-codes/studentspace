@@ -23,14 +23,14 @@ public class ChatController {
                 .body("Queue is full. Please try again later.");
         Chatroom room = roomManager.findAvailableRoom(user);
         waitingUsers.remove(user);
-        return ResponseEntity.ok("Room id: " + room.roomId);
+        return ResponseEntity.ok(room.roomId);
     }
 
     @GetMapping("/chat/{roomId}")
     public ResponseEntity<String> getAllMessages(@PathVariable String roomId) {
         Chatroom room = roomManager.getRoom(roomId);
-        if (room.isExpired()) return ResponseEntity.status(HttpStatus.GONE).body("Room has expired");
         if (room == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found");
+        if (room.isExpired()) return ResponseEntity.status(HttpStatus.GONE).body("Room has expired");
         if (room.messages.isEmpty()) return ResponseEntity.ok("No messages yet");
         return ResponseEntity.ok(room.getMessageString());
     }
@@ -38,10 +38,19 @@ public class ChatController {
     @PostMapping("/chat/{roomId}")
     public ResponseEntity<String> sendMessage(@PathVariable String roomId, @RequestBody Message message) {
         Chatroom room = roomManager.getRoom(roomId);
-        if (room.isExpired()) return ResponseEntity.status(HttpStatus.GONE).body("Room has expired");
         if (room == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found");
+        if (room.isExpired()) return ResponseEntity.status(HttpStatus.GONE).body("Room has expired");
         if (room.addMessage(message)) return ResponseEntity.ok("Message sent");
-        return ResponseEntity.badRequest().body("Unfamiliar username");
+        return ResponseEntity.badRequest().body("Unfamiliar username or badly formatted message");
+    }
+
+    @GetMapping("/chat/{roomId}/end")
+    public ResponseEntity<String> endChat(@PathVariable String roomId) {
+        Chatroom room = roomManager.getRoom(roomId);
+        if (room == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found");
+        if (room.isExpired()) return ResponseEntity.status(HttpStatus.GONE).body("Room has expired");
+
+        return ResponseEntity.ok("Closed chatroom");
     }
 
 }

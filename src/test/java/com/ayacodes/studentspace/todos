@@ -1,3 +1,33 @@
+
+🧩 NEXT STEPS (See TESTS below)
+
+Matching Features
+    Match preference weights (e.g., users can mark topics as “priority”)
+    Fallback matching (if no one with the same topic is available, suggest nearby topics)
+    Matching queue with timeout (if a user waits too long, auto-match them)
+
+Safety & Trust
+    Report/block system
+    Anonymity toggle
+    One-time-use chatrooms or expiration timers
+
+Chatroom Upgrades
+    Chatroom IDs returned in response
+    In-memory chat vs persistent chat (store messages in DB)
+    Typing indicators / "user joined" notifications
+
+Admin & Maintenance
+    Room cleanup job (remove empty/inactive rooms)
+    Log who matched with whom and when (for audit)
+    Metrics (e.g. how many matches per day, average wait time)
+
+Developer Enhancements
+    Use @Builder or constructors for DTOs to reduce boilerplate
+    Add @Slf4j and use structured logging for traceability
+    Add Swagger/OpenAPI for auto-documenting your API
+
+🛡️ TESTS TO WRITE
+
 1. Unit Tests (Logic-Level)
 Make sure to write JUnit tests for:
     Matching logic (e.g., pairing based on topic or other rules)
@@ -26,30 +56,3 @@ Try:
     Case sensitivity with enums ("friends" vs "FRIENDS")
     Stale rooms that never get cleaned up
     Time-based bugs (e.g. using LocalDateTime.now() inconsistently)
-
-🚀 Next Steps & Feature Ideas
-
-🧩 Matching Features
-    Match preference weights (e.g., users can mark topics as “priority”)
-    Fallback matching (if no one with the same topic is available, suggest nearby topics)
-    Matching queue with timeout (if a user waits too long, auto-match them)
-
-🛡️ Safety & Trust
-    Report/block system
-    Anonymity toggle
-    One-time-use chatrooms or expiration timers
-
-💬 Chatroom Upgrades
-    Chatroom IDs returned in response
-    In-memory chat vs persistent chat (store messages in DB)
-    Typing indicators / "user joined" notifications
-
-🧼 Admin & Maintenance
-    Room cleanup job (remove empty/inactive rooms)
-    Log who matched with whom and when (for audit)
-    Metrics (e.g. how many matches per day, average wait time)
-
-🔧 Developer Enhancements
-    Use @Builder or constructors for DTOs to reduce boilerplate
-    Add @Slf4j and use structured logging for traceability
-    Add Swagger/OpenAPI for auto-documenting your API

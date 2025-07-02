@@ -4,9 +4,10 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Chatroom {
-    public String roomId;
+    public String roomId = UUID.randomUUID().toString();
     List<User> users = new ArrayList<>();
     Integer capacity = 2;
     Boolean atCapacity = false;
@@ -17,8 +18,10 @@ public class Chatroom {
     //if I want to make group chats later,
     //      I will have to differentiate between minimum users to start a chat and capacity reached
     private static final Duration maxTimeOpen = Duration.ofMinutes(30);
+    //chat expires after 30 minutes, might change this
 
     public boolean isExpired() {
+        if (chatStartedAt == null) return false;
         Duration timeElapsed = Duration.between(chatStartedAt, LocalDateTime.now());
         return timeElapsed.compareTo(maxTimeOpen) > 0;
     }
