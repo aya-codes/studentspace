@@ -13,23 +13,54 @@ public class Chatroom {
     Boolean atCapacity = false;
     Topic topic;
     List<Message> messages = new ArrayList<>();
+    Boolean isClosed = false;
     private LocalDateTime chatStartedAt;
     //a chat starts when it reaches 2 users
     //if I want to make group chats later,
     //      I will have to differentiate between minimum users to start a chat and capacity reached
     private static final Duration maxTimeOpen = Duration.ofMinutes(30);
     //chat expires after 30 minutes, might change this
+    private static LocalDateTime chatEndedAt;
+
+    public void closeRoom() {
+        this.addClosingMessage();
+        this.isClosed = true;
+        this.chatEndedAt = LocalDateTime.now();
+    }
+
+    private void addClosingMessage() {
+        Message finalMessage = new Message();
+        finalMessage.username = "System";
+        finalMessage.timestamp = LocalDateTime.now();
+        finalMessage.body = "This chat has been closed";
+        this.addMessage(finalMessage);
+    }
+
+    public Duration timeElapsed() {
+        LocalDateTime now = LocalDateTime.now();
+        return Duration.between(this.chatStartedAt, now);
+    }
+
+    public String minutesRemaining() {
+        Duration timeRemaining = maxTimeOpen.minus(this.timeElapsed());
+        return timeRemaining.toMinutes() + " minutes";
+    }
 
     public boolean isExpired() {
         if (chatStartedAt == null) return false;
-        Duration timeElapsed = Duration.between(chatStartedAt, LocalDateTime.now());
-        return timeElapsed.compareTo(maxTimeOpen) > 0;
+        if (this.isClosed) return true;
+        boolean expired = this.timeElapsed().compareTo(maxTimeOpen) > 0;
+        if (expired) {
+            this.isClosed = true;
+            this.chatEndedAt = LocalDateTime.now();
+        }
+        return expired;
     }
 
     public Boolean isAvailable() {
-        if (atCapacity) return false;
+        if (this.atCapacity) return false;
         if (users.size() < capacity) return true;
-        atCapacity = true;
+        this.atCapacity = true;
         return false;
     }
 
@@ -38,18 +69,18 @@ public class Chatroom {
     }
 
     public Boolean addUser(User user) {
-        if (user.topic.equals(this.topic) && !atCapacity) users.add(user);
+        if (user.topic.equals(this.topic) && !this.atCapacity) users.add(user);
         else return false;
-        if (users.size() == capacity) {
-            atCapacity = true;
-            chatStartedAt = LocalDateTime.now();
+        if (users.size() == this.capacity) {
+            this.atCapacity = true;
+            this.chatStartedAt = LocalDateTime.now();
         }
         return true;
     }
 
     public String getMessageString() {
         StringBuilder messagesString = new StringBuilder();
-        for (Message message : messages) {
+        for (Message message : this.messages) {
             messagesString.append(message.toString());
         }
         return messagesString.toString();
@@ -59,7 +90,7 @@ public class Chatroom {
         if (message.username.isBlank() || message.body.isBlank()) return false;
         LocalDateTime timeOfRequest = LocalDateTime.now();
         message.setTimestamp(timeOfRequest);
-        for (User user : users) {
+        for (User user : this.users) {
             if (user.username.equals(message.username)) {
                 return this.messages.add(message);
             }
@@ -70,11 +101,11 @@ public class Chatroom {
     @Override
     public String toString() {
         return "Chatroom{" +
-                "id=" + roomId +
-                ", users=" + users +
-                ", atCapacity=" + atCapacity +
-                ", topic=" + topic +
-                ", messages=" + messages +
+                "id=" + this.roomId +
+                ", users=" + this.users +
+                ", atCapacity=" + this.atCapacity +
+                ", topic=" + this.topic +
+                ", messages=" + this.messages +
                 '}';
     }
 }

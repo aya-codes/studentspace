@@ -14,7 +14,9 @@ public class ChatroomManager {
         return rooms;
     }
 
-    public void removeRoom(String id) {
+    public void closeRoom(String id) {
+        Chatroom room = rooms.get(id);
+        room.closeRoom();
         rooms.remove(id);
     }
 
