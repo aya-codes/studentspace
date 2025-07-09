@@ -60,6 +60,14 @@ public class ChatController {
         return ResponseEntity.ok("Closed chatroom");
     }
 
+    @PostMapping("/chat/{roomId}/report")
+    public ResponseEntity<String> reportAndEndChat(@PathVariable String roomId, @RequestBody String reportReason) {
+        Optional<ResponseEntity<String>> errorResponse = this.roomIssues(roomId);
+        if (errorResponse.isPresent()) return errorResponse.orElse(null);
+        roomManager.reportAndCloseRoom(roomId, reportReason);
+        return ResponseEntity.ok("Submitted report and closed chatroom");
+    }
+
     //Countdown timer till room expires
     private String timer(String roomId) {
         return "Time remaining:" + roomManager.minutesRemaining(roomId) + " minutes" + "\n";

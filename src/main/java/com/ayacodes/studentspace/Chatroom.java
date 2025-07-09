@@ -5,6 +5,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class Chatroom {
@@ -20,6 +21,13 @@ public class Chatroom {
     private Instant chatEndedAt;
     private int finalMessageCount;
     public boolean closedByUser;
+    private boolean reportSubmitted;
+    private Optional<String> reportReason;
+
+    public void setReport(String reportReason) {
+        this.reportReason = Optional.of(reportReason);
+        this.reportSubmitted = true;
+    }
 
     public ArchivedChatroom createArchive() {
         return new ArchivedChatroom(
@@ -29,7 +37,9 @@ public class Chatroom {
                 this.chatStartedAt,
                 this.chatEndedAt,
                 this.finalMessageCount,
-                this.atCapacity);
+                this.atCapacity,
+                this.reportSubmitted,
+                this.reportReason);
     }
 
     public void closeRoom() {

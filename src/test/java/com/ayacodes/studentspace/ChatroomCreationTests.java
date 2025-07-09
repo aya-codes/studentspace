@@ -11,7 +11,7 @@ class ChatroomCreationTests {
         ChatroomManager manager = new ChatroomManager();
         User userAlice = new User();
         userAlice.username = "alice";
-        userAlice.topic = Topic.FRIENDS;
+        userAlice.topic = Topic.FRIENDSHIP;
         Chatroom room = manager.createRoom(userAlice);
         assertFalse(room.atCapacity);
         assertTrue(room.isAvailable());
@@ -24,7 +24,7 @@ class ChatroomCreationTests {
         ChatroomManager manager = new ChatroomManager();
         User userAlice = new User();
         userAlice.username = "alice";
-        userAlice.topic = Topic.FRIENDS;
+        userAlice.topic = Topic.FRIENDSHIP;
         Chatroom room = manager.createRoom(userAlice);
         assertEquals(1, room.getUsers().size());
         assertEquals("alice", room.getUsers().get(0).getUsername());
@@ -38,7 +38,7 @@ class ChatroomCreationTests {
         assertEquals(1, room.getUsers().size());
         assertEquals("alice", room.getUsers().get(0).getUsername());
 
-        userBob.topic = Topic.FRIENDS;
+        userBob.topic = Topic.FRIENDSHIP;
         assertTrue(room.addUser(userBob));
         assertTrue(room.atCapacity);
         assertFalse(room.isAvailable());
@@ -50,21 +50,21 @@ class ChatroomCreationTests {
         ChatroomManager manager = new ChatroomManager();
         User userAlice = new User();
         userAlice.username = "alice";
-        userAlice.topic = Topic.FRIENDS;
+        userAlice.topic = Topic.FRIENDSHIP;
         Chatroom room = manager.createRoom(userAlice);
         assertEquals(1, room.getUsers().size());
         assertEquals("alice", room.getUsers().get(0).getUsername());
 
         User userBob = new User();
         userBob.username = "bob";
-        userBob.topic = Topic.FRIENDS;
+        userBob.topic = Topic.FRIENDSHIP;
         assertTrue(room.addUser(userBob));
         assertEquals(2, room.getUsers().size());
         assertTrue(room.atCapacity);
 
         User userTom = new User();
         userTom.username = "tom";
-        userTom.topic = Topic.FRIENDS;
+        userTom.topic = Topic.FRIENDSHIP;
         assertFalse(room.addUser(userTom));
         assertEquals(2, room.getUsers().size());
     }

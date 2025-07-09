@@ -22,6 +22,12 @@ public class ChatroomManager {
         return OK;
     }
 
+    public void reportAndCloseRoom(String roomId, String reportReason) {
+        Chatroom room = rooms.get(roomId);
+        room.setReport(reportReason);
+        this.closeRoom(roomId, true);
+    }
+
     public void closeRoom(String roomId, boolean closedByUser) {
         Chatroom room = rooms.get(roomId);
         room.closedByUser = closedByUser;

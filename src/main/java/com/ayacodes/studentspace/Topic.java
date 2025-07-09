@@ -1,8 +1,11 @@
 package com.ayacodes.studentspace;
 
 public enum Topic {
-    FRIENDS,
+    SPORTS,
+    FRIENDSHIP,
     STUDIES,
     STRESS,
-    HOMESICKNESS
+    HOMESICKNESS,
+    POLITICS,
+    RELIGION
 }

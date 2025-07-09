@@ -14,11 +14,11 @@ public class ChatroomMessagingTests {
         ChatroomManager manager = new ChatroomManager();
         User userAlice = new User();
         userAlice.username = "alice";
-        userAlice.topic = Topic.FRIENDS;
+        userAlice.topic = Topic.FRIENDSHIP;
         Chatroom room = manager.createRoom(userAlice);
         User userBob = new User();
         userBob.username = "bob";
-        userBob.topic = Topic.FRIENDS;
+        userBob.topic = Topic.FRIENDSHIP;
         assertTrue(room.addUser(userBob));
 
         Message messageFromAlice = new Message("alice","first successful message", Instant.now());
@@ -36,11 +36,11 @@ public class ChatroomMessagingTests {
         ChatroomManager manager = new ChatroomManager();
         User userAlice = new User();
         userAlice.username = "alice";
-        userAlice.topic = Topic.FRIENDS;
+        userAlice.topic = Topic.FRIENDSHIP;
         Chatroom room = manager.createRoom(userAlice);
         User userBob = new User();
         userBob.username = "bob";
-        userBob.topic = Topic.FRIENDS;
+        userBob.topic = Topic.FRIENDSHIP;
         assertTrue(room.addUser(userBob));
 
         Message messageFromUnknownUser = new Message("notAlice","hello",Instant.now());
@@ -55,11 +55,11 @@ public class ChatroomMessagingTests {
         ChatroomManager manager = new ChatroomManager();
         User userAlice = new User();
         userAlice.username = "alice";
-        userAlice.topic = Topic.FRIENDS;
+        userAlice.topic = Topic.FRIENDSHIP;
         Chatroom room = manager.createRoom(userAlice);
         User userBob = new User();
         userBob.username = "bob";
-        userBob.topic = Topic.FRIENDS;
+        userBob.topic = Topic.FRIENDSHIP;
         assertTrue(room.addUser(userBob));
 
         Message messageFromEmptyUsername = new Message("","hello",Instant.now());
@@ -77,11 +77,11 @@ public class ChatroomMessagingTests {
         ChatroomManager manager = new ChatroomManager();
         User userAlice = new User();
         userAlice.username = "alice";
-        userAlice.topic = Topic.FRIENDS;
+        userAlice.topic = Topic.FRIENDSHIP;
         Chatroom room = manager.createRoom(userAlice);
         User userBob = new User();
         userBob.username = "bob";
-        userBob.topic = Topic.FRIENDS;
+        userBob.topic = Topic.FRIENDSHIP;
         assertTrue(room.addUser(userBob));
 
         Message blankMessageFromBob = new Message("bob","     ",Instant.now());//blank message should fail
