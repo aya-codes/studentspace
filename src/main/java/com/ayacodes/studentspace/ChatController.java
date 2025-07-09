@@ -4,12 +4,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @RestController
 public class ChatController {
-    private Queue<User> waitingUsers = new ConcurrentLinkedQueue<>();
+    private final Queue<User> waitingUsers = new ConcurrentLinkedQueue<>();
     private final ChatroomManager roomManager;
 
     public ChatController(ChatroomManager roomManager) {
@@ -18,71 +20,71 @@ public class ChatController {
 
     @PostMapping ("/start")
     public ResponseEntity<String> matchUserToRoom(@RequestBody User user) {
-        if (user.username.isBlank() || !this.waitingUsers.add(user)) {
-            return this.resolveUserIssue(user);
-        }
-        Chatroom room = this.roomManager.findAvailableRoom(user);
+        Optional<ResponseEntity<String>> errorResponse = this.resolveUserIssue(user);
+        if (errorResponse.isPresent()) return errorResponse.get();
+        String roomId = roomManager.findAvailableRoom(user);
         this.waitingUsers.remove(user);
-        return ResponseEntity.ok(room.roomId);
+        return ResponseEntity.ok(roomId);
     }
 
     @GetMapping("/chat/{roomId}")
     public ResponseEntity<String> getAllMessages(@PathVariable String roomId) {
-        Chatroom room = this.roomManager.getRoom(roomId);
-        if (room==null || room.isExpired()) {
-            return this.resolveRoomIssue(room);
-        }
-        if (room.messages.isEmpty()) {
-            return ResponseEntity.ok(this.timer(room) + "No messages yet");
-        }
-        return ResponseEntity.ok(this.timer(room) + room.getMessageString());
+        Optional<ResponseEntity<String>> errorResponse = this.roomIssues(roomId);
+        if (errorResponse.isPresent()) return errorResponse.get();
+        String messagesString = roomManager.getMessagesString(roomId);
+        return ResponseEntity.ok(this.timer(roomId) +
+                Objects.requireNonNullElse(messagesString, "No messages yet"));
     }
 
     @PostMapping("/chat/{roomId}")
-    public ResponseEntity<String> sendMessage(@PathVariable String roomId, @RequestBody Message message) {
-        Chatroom room = this.roomManager.getRoom(roomId);
-        if (room==null || room.isExpired()) {
-            return this.resolveRoomIssue(room);
-        }
-        if (room.addMessage(message)) {
-            return ResponseEntity.ok(this.timer(room) + "Message sent");
+    public ResponseEntity<String> sendMessage(@PathVariable String roomId, @RequestBody RawMessage rawMessage) {
+        Optional<ResponseEntity<String>> errorResponse = this.roomIssues(roomId);
+        if (errorResponse.isPresent()) return errorResponse.get();
+        if (roomManager.addMessage(roomId, rawMessage)) {
+            return ResponseEntity.ok(this.timer(roomId) + "Message sent");
         }
         return ResponseEntity.badRequest().body("Unfamiliar username or badly formatted message");
     }
 
     @GetMapping("/chat/{roomId}/timer")
     public ResponseEntity<String> getTimeRemaining(@PathVariable String roomId) {
-        Chatroom room = this.roomManager.getRoom(roomId);
-        if (room==null || room.isExpired()) {
-            return this.resolveRoomIssue(room);
-        }
-        else return ResponseEntity.ok(this.timer(room));
+        Optional<ResponseEntity<String>> errorResponse = this.roomIssues(roomId);
+        return errorResponse.orElseGet(() -> ResponseEntity.ok(this.timer(roomId)));
     }
 
     @GetMapping("/chat/{roomId}/end")
     public ResponseEntity<String> endChat(@PathVariable String roomId) {
-        Chatroom room = roomManager.getRoom(roomId);
-        if (room == null || room.isExpired()) {
-            return this.resolveRoomIssue(room);
-        }
-        roomManager.closeRoom(roomId);
+        Optional<ResponseEntity<String>> errorResponse = this.roomIssues(roomId);
+        if (errorResponse.isPresent()) return errorResponse.orElse(null);
+        roomManager.closeRoom(roomId, true);
         return ResponseEntity.ok("Closed chatroom");
     }
 
     //Countdown timer till room expires
-    private String timer(Chatroom room) {
-        return "Time remaining:" + room.minutesRemaining() + " minutes" + "\n";
+    private String timer(String roomId) {
+        return "Time remaining:" + roomManager.minutesRemaining(roomId) + " minutes" + "\n";
     }
 
-    private ResponseEntity<String> resolveUserIssue(User user) {
-        if (user.username.isBlank()) return ResponseEntity.badRequest().body("Invalid username");
-        else return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body("Queue is full. Please try again later.");
+    private Optional<ResponseEntity<String>> resolveUserIssue(User user) {
+        if (user.username.isBlank()) {
+            return Optional.of(ResponseEntity.badRequest().body("Invalid username"));
+        }
+        if (!this.waitingUsers.add(user)) {
+            return Optional.of(ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body("Queue is full. Please try again later."));
+        }
+        return Optional.empty();
     }
 
-    private ResponseEntity<String> resolveRoomIssue(Chatroom room) {
-        if (room == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found");
-        else return ResponseEntity.status(HttpStatus.GONE).body("This chat has ended");
+    private Optional<ResponseEntity<String>> roomIssues(String roomId) {
+        RoomStatus status = roomManager.getRoomStatus(roomId);
+        return switch (status) {
+            case OK ->
+                    Optional.empty();
+            case CLOSED ->
+                    Optional.of(ResponseEntity.status(HttpStatus.GONE).body("This chat has ended"));
+            case NOT_FOUND ->
+                    Optional.of(ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found"));
+        };
     }
-
 }

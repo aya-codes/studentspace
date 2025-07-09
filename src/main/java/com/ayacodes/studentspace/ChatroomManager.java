@@ -6,36 +6,44 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.ayacodes.studentspace.RoomStatus.*;
+
 @Service
 public class ChatroomManager {
-    private Map<String, Chatroom> rooms = new HashMap<>();
+    private final Map<String, Chatroom> rooms = new HashMap<>();
+    private final Map<String, ArchivedChatroom> archivedRooms = new HashMap<>();
 
-    public Map<String, Chatroom> getRooms() {
-        return rooms;
+    public RoomStatus getRoomStatus(String roomId) {
+        if (rooms.isEmpty()) return NOT_FOUND;
+        Chatroom room = rooms.get(roomId);
+        if (room == null) return NOT_FOUND;
+        if (room.isExpired()) this.closeRoom(roomId, false);
+        if (room.isClosed) return CLOSED;
+        return OK;
     }
 
-    public void closeRoom(String id) {
-        Chatroom room = rooms.get(id);
+    public void closeRoom(String roomId, boolean closedByUser) {
+        Chatroom room = rooms.get(roomId);
+        room.closedByUser = closedByUser;
         room.closeRoom();
-        rooms.remove(id);
+        ArchivedChatroom archivedRoom = room.createArchive();
+        archivedRooms.put(roomId, archivedRoom);
     }
 
     @Scheduled(fixedRate = 300000) // every 5 minutes
     public void removeExpiredRooms() {
-        rooms.entrySet().removeIf(entry -> entry.getValue().isExpired());
+        rooms.entrySet().removeIf(entry -> entry.getValue().isClosed);
     }
 
-    public Chatroom getRoom(String id) {
-        return rooms.get(id);
-    }
-
-    public Chatroom findAvailableRoom(User user) {
+    public String findAvailableRoom(User user) {
         for (Chatroom room : rooms.values()) {
             if (room.isAvailable() && (room.topic.equals(user.topic))) {
-                return this.addUserToRoom(room, user);
+                this.addUserToRoom(room, user);
+                return room.roomId;
             }
         }
-        return this.createRoom(user);
+        Chatroom newRoom = this.createRoom(user);
+        return newRoom.roomId;
     }
 
     public Chatroom createRoom(User user) {
@@ -49,5 +57,21 @@ public class ChatroomManager {
         room.addUser(user);
         user.matchedToRoom = true;
         return room;
+    }
+
+    public boolean addMessage(String roomId, RawMessage rawMessage) {
+        Chatroom room = rooms.get(roomId);
+        return room.addRawMessage(rawMessage);
+    }
+
+    public String minutesRemaining(String roomId) {
+        Chatroom room = rooms.get(roomId);
+        return room.minutesRemaining();
+    }
+
+    public String getMessagesString(String roomId) {
+        Chatroom room = rooms.get(roomId);
+        if (room.messages.isEmpty()) return null;
+        return room.getMessageString();
     }
 }
