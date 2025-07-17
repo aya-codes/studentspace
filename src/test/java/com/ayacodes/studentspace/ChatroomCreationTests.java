@@ -1,5 +1,9 @@
 package com.ayacodes.studentspace;
 
+import com.ayacodes.studentspace.backend.Chatroom;
+import com.ayacodes.studentspace.backend.ChatroomManager;
+import com.ayacodes.studentspace.backend.Topic;
+import com.ayacodes.studentspace.backend.User;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,10 +14,10 @@ class ChatroomCreationTests {
     void addUserToRoomSuccessful() {
         ChatroomManager manager = new ChatroomManager();
         User userAlice = new User();
-        userAlice.username = "alice";
-        userAlice.topic = Topic.FRIENDSHIP;
+        userAlice.setUsername("alice");
+        userAlice.setTopic(Topic.FRIENDSHIP);
         Chatroom room = manager.createRoom(userAlice);
-        assertFalse(room.atCapacity);
+        assertFalse(room.getAtCapacity());
         assertTrue(room.isAvailable());
         assertEquals(1, room.getUsers().size());
         assertEquals("alice", room.getUsers().get(0).getUsername());
@@ -23,24 +27,24 @@ class ChatroomCreationTests {
     void topicMismatchAddUserFail() {
         ChatroomManager manager = new ChatroomManager();
         User userAlice = new User();
-        userAlice.username = "alice";
-        userAlice.topic = Topic.FRIENDSHIP;
+        userAlice.setUsername("alice");
+        userAlice.setTopic(Topic.FRIENDSHIP);
         Chatroom room = manager.createRoom(userAlice);
         assertEquals(1, room.getUsers().size());
         assertEquals("alice", room.getUsers().get(0).getUsername());
 
         User userBob = new User();
-        userBob.username = "bob";
-        userBob.topic = Topic.STRESS;
+        userBob.setUsername("bob");
+        userBob.setTopic(Topic.STRESS);
         assertFalse(room.addUser(userBob));
-        assertFalse(room.atCapacity);
+        assertFalse(room.getAtCapacity());
         assertTrue(room.isAvailable());
         assertEquals(1, room.getUsers().size());
         assertEquals("alice", room.getUsers().get(0).getUsername());
 
-        userBob.topic = Topic.FRIENDSHIP;
+        userBob.setTopic(Topic.FRIENDSHIP);
         assertTrue(room.addUser(userBob));
-        assertTrue(room.atCapacity);
+        assertTrue(room.getAtCapacity());
         assertFalse(room.isAvailable());
         assertEquals(2, room.getUsers().size());
     }
@@ -49,22 +53,22 @@ class ChatroomCreationTests {
     void atCapacityAddUserFail() {
         ChatroomManager manager = new ChatroomManager();
         User userAlice = new User();
-        userAlice.username = "alice";
-        userAlice.topic = Topic.FRIENDSHIP;
+        userAlice.setUsername("alice");
+        userAlice.setTopic(Topic.FRIENDSHIP);
         Chatroom room = manager.createRoom(userAlice);
         assertEquals(1, room.getUsers().size());
         assertEquals("alice", room.getUsers().get(0).getUsername());
 
         User userBob = new User();
-        userBob.username = "bob";
-        userBob.topic = Topic.FRIENDSHIP;
+        userBob.setUsername("bob");
+        userBob.setTopic(Topic.FRIENDSHIP);
         assertTrue(room.addUser(userBob));
         assertEquals(2, room.getUsers().size());
-        assertTrue(room.atCapacity);
+        assertTrue(room.getAtCapacity());
 
         User userTom = new User();
-        userTom.username = "tom";
-        userTom.topic = Topic.FRIENDSHIP;
+        userTom.setUsername("tom");
+        userTom.setTopic(Topic.FRIENDSHIP);
         assertFalse(room.addUser(userTom));
         assertEquals(2, room.getUsers().size());
     }
