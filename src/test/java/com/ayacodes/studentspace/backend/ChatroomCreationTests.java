@@ -1,9 +1,5 @@
-package com.ayacodes.studentspace;
+package com.ayacodes.studentspace.backend;
 
-import com.ayacodes.studentspace.backend.Chatroom;
-import com.ayacodes.studentspace.backend.ChatroomManager;
-import com.ayacodes.studentspace.backend.Topic;
-import com.ayacodes.studentspace.backend.User;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

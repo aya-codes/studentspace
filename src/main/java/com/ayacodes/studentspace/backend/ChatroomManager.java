@@ -22,18 +22,19 @@ public class ChatroomManager {
         return OK;
     }
 
-    public void reportAndCloseRoom(String roomId, String reportReason) {
+    public ArchivedChatroom reportAndCloseRoom(String roomId, String reportReason) {
         Chatroom room = rooms.get(roomId);
         room.setReport(reportReason);
-        this.closeRoom(roomId, true);
+        return this.closeRoom(roomId, true);
     }
 
-    public void closeRoom(String roomId, boolean closedByUser) {
+    public ArchivedChatroom closeRoom(String roomId, boolean closedByUser) {
         Chatroom room = rooms.get(roomId);
         room.closedByUser = closedByUser;
         room.closeRoom();
         ArchivedChatroom archivedRoom = room.createArchive();
         archivedRooms.put(roomId, archivedRoom);
+        return archivedRoom;
     }
 
     @Scheduled(fixedRate = 300000) // every 5 minutes
