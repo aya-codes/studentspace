@@ -10,7 +10,7 @@ WORKDIR /app
 
 # Copy the Maven wrapper and pom.xml first (for caching dependencies)
 COPY mvnw ./
-COPY .mvn .mvn
+COPY ../.mvn .mvn
 COPY pom.xml ./
 
 # Make Maven wrapper executable
@@ -20,7 +20,7 @@ RUN chmod +x mvnw
 RUN ./mvnw dependency:go-offline
 
 # Copy the rest of the application code
-COPY src ./src
+COPY ../src ./src
 
 # Build the application
 RUN ./mvnw clean package -DskipTests
