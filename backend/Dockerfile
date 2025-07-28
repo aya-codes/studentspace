@@ -10,7 +10,7 @@ WORKDIR /app
 
 # Copy the Maven wrapper and pom.xml first (for caching dependencies)
 COPY mvnw ./
-COPY ../.mvn .mvn
+COPY .mvn .mvn
 COPY pom.xml ./
 
 # Make Maven wrapper executable
