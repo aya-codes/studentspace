@@ -89,7 +89,7 @@ function App() {
     const pollRoomStatus = (roomId, onReady) => {
         const poll = setInterval(async () => {
             try {
-                const res = await fetch(`http://localhost:8080/status/${roomId}`);
+                const res = await fetch(`https://studentspace.onrender.com/status/${roomId}`);
                 const { status } = await res.json();
                 if (status === "ok") {
                     clearInterval(poll);
@@ -104,7 +104,7 @@ function App() {
     const handleEndChat = async () => {
         if (!roomId || screen !== 'chat') return;
         try {
-            const response = await fetch(`http://localhost:8080/chat/${roomId}/end`);
+            const response = await fetch(`https://studentspace.onrender.com/chat/${roomId}/end`);
             setScreen("end");
         } catch (err) {
             console.error(err);
@@ -116,7 +116,7 @@ function App() {
         const reason = window.prompt("Enter a reason for reporting:");
         if (!reason) return;
         try {
-            const response = await fetch(`http://localhost:8080/chat/${roomId}/report`, {
+            const response = await fetch(`https://studentspace.onrender.com/chat/${roomId}/report`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(reason),
@@ -133,7 +133,7 @@ function App() {
         if (!roomId || screen !== 'chat') return;
         const interval = setInterval(async () => {
             try {
-                const response = await fetch(`http://localhost:8080/status/${roomId}`);
+                const response = await fetch(`https://studentspace.onrender.com/status/${roomId}`);
                 //Expired or closed room
                 if (response.status === 410 || response.status === 404) {
                     await handleEndChat();

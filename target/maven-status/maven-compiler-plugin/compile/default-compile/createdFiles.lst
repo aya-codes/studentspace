@@ -1,0 +1,12 @@
+com/ayacodes/studentspace/backend/ChatroomManager.class
+com/ayacodes/studentspace/backend/Message.class
+com/ayacodes/studentspace/backend/ChatController$1.class
+com/ayacodes/studentspace/backend/ArchivedChatroom.class
+com/ayacodes/studentspace/backend/Chatroom.class
+com/ayacodes/studentspace/backend/GlobalExceptionHandler.class
+com/ayacodes/studentspace/backend/Topic.class
+com/ayacodes/studentspace/backend/ChatController.class
+com/ayacodes/studentspace/backend/RoomStatus.class
+com/ayacodes/studentspace/backend/User.class
+com/ayacodes/studentspace/backend/StudentSpaceApplication.class
+com/ayacodes/studentspace/backend/RawMessage.class
