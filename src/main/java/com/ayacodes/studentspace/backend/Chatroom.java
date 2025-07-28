@@ -2,7 +2,6 @@ package com.ayacodes.studentspace.backend;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,13 +15,17 @@ public class Chatroom {
     Topic topic;
     public List<Message> messages = new ArrayList<>();
     Boolean isClosed = false;
-    private static final Duration maxTimeOpen = Duration.ofMinutes(30);
+    private static final Duration maxTimeOpen = Duration.ofMinutes(1);
     private Instant chatStartedAt;
     private Instant chatEndedAt;
     private int finalMessageCount;
     public boolean closedByUser;
     private boolean reportSubmitted;
     private Optional<String> reportReason;
+
+    public Chatroom() {
+        this.chatStartedAt = Instant.now();
+    }
 
     public void setReport(String reportReason) {
         this.reportReason = Optional.of(reportReason);
@@ -62,13 +65,12 @@ public class Chatroom {
     }
 
     public Duration timeElapsed() {
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now();
         return Duration.between(this.chatStartedAt, now);
     }
 
-    public String minutesRemaining() {
-        Duration timeRemaining = maxTimeOpen.minus(this.timeElapsed());
-        return timeRemaining.toMinutes() + " minutes";
+    public Long getExpirationTime() {
+        return chatStartedAt.plus(maxTimeOpen).toEpochMilli();
     }
 
     public boolean isExpired() {
@@ -117,6 +119,7 @@ public class Chatroom {
         return this.addMessage(message);
     }
 
+    //this doesn't check if room is closed
     public boolean addMessage(Message message) {
         if (message.sender().isBlank() || message.body().isBlank()) {
             return false;

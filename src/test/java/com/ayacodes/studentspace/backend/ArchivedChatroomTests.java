@@ -23,14 +23,10 @@ public class ArchivedChatroomTests {
         userBob.setUsername("bob");
         userBob.setTopic(Topic.FRIENDSHIP);
         assertTrue(room.addUser(userBob));
-        Message aliceMessage1 = new Message("alice","1", Instant.now());
-        room.addMessage(aliceMessage1);
-        Message bobMessage1 = new Message("bob","2", Instant.now());
-        room.addMessage(bobMessage1);
-        Message aliceMessage2 = new Message("alice","3", Instant.now());
-        room.addMessage(aliceMessage2);
-        Message bobMessage2 = new Message("bob","4", Instant.now());
-        room.addMessage(bobMessage2);
+        room.addMessage(new Message("alice","1", Instant.now()));
+        room.addMessage(new Message("bob","2", Instant.now()));
+        room.addMessage(new Message("alice","3", Instant.now()));
+        room.addMessage(new Message("bob","4", Instant.now()));
     }
 
     @Test

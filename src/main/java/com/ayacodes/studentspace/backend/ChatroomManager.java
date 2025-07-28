@@ -19,6 +19,7 @@ public class ChatroomManager {
         if (room == null) return NOT_FOUND;
         if (room.isExpired()) this.closeRoom(roomId, false);
         if (room.isClosed) return CLOSED;
+        if (!room.atCapacity) return WAITING;
         return OK;
     }
 
@@ -71,9 +72,9 @@ public class ChatroomManager {
         return room.addRawMessage(rawMessage);
     }
 
-    public String minutesRemaining(String roomId) {
+    public String expirationTime(String roomId) {
         Chatroom room = rooms.get(roomId);
-        return room.minutesRemaining();
+        return room.getExpirationTime().toString();
     }
 
     public String getMessagesString(String roomId) {
