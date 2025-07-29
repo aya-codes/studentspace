@@ -12,11 +12,13 @@ function StartScreen({ onStartChat }) {
 
     return (
         <div className="d-flex align-items-center justify-content-center vh-100">
-            <form onSubmit={handleSubmit} className="border p-4 rounded shadow bg-light" style={{ minWidth: '800px' }}>
+            <form onSubmit={handleSubmit} className="border p-4 rounded shadow bg-light"
+                  style={{ minWidth: '800px' }}>
                 <h1 className="text-center mb-4"> Let's Chat </h1>
                 <div className="mb-3">
                     <label htmlFor="nickname" className="form-label">Choose your nickname:</label>
-                    <input type="text" id="nickname" name="nickname" required maxLength="15" className="form-control"
+                    <input type="text" id="nickname" name="nickname" required maxLength="15"
+                           className="form-control"
                            onChange={(e) => setNickname(e.target.value)} />
                 </div>
 
