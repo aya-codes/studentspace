@@ -8,7 +8,7 @@ import java.util.*;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-@CrossOrigin(origins = "http://localhost:5173/")
+@CrossOrigin(origins = "https://studentspace.onrender.com")
 @RestController
 public class ChatController {
     private final Queue<User> waitingUsers = new ConcurrentLinkedQueue<>();
