@@ -31,22 +31,33 @@ function App() {
                 setScreen("chat");
             } else if (status === "waiting") {
                 setScreen("waiting");
-                pollRoomStatus(roomId, () => {
-                    // double check before entering
-                    fetch(`${backend}/status/${roomId}`).then(res => {
-                        if (res.status === 410 || res.status === 404) {
-                            setScreen("end");
-                        } else {
-                            setScreen("chat");
-                        }
-                    });
-                });
+                pollRoomStatus(roomId);
             }
-
         } catch (err) {
             console.error(err);
             alert("Failed to start chat");
         }
+    };
+
+    const pollRoomStatus = (roomId) => {
+        if (screen !== 'waiting') return;
+        const poll = setInterval(async () => {
+            try {
+                const res = await fetch(`${backend}/status/${roomId}`);
+                if (res.status === 410 || res.status === 404) {
+                    clearInterval(poll);
+                    setScreen("end");
+                    return;
+                }
+                const { status } = await res.json();
+                if (status === "ok") {
+                    clearInterval(poll);
+                    setScreen("chat");
+                }
+            } catch (err) {
+                console.error("Polling error:", err);
+            }
+        }, 2000);
     };
 
     const fetchExpiry = async () => {
@@ -75,28 +86,8 @@ function App() {
 
     useEffect(() => {
         if (!roomId || screen !== 'chat') return;
-
-        //const interval = setInterval(fetchExpiry, 5000);  // check every 5s
-        fetchExpiry(); // immediate fetch on mount
-
-        //return () => clearInterval(interval);
+        fetchExpiry();
     }, [roomId, screen]);
-
-
-    const pollRoomStatus = (roomId) => {
-        if (screen !== 'waiting') return;
-        const poll = setInterval(async () => {
-            try {
-                const res = await fetch(`${backend}/status/${roomId}`);
-                const { status } = await res.json();
-                if (status === "ok") {
-                    clearInterval(poll);
-                }
-            } catch (err) {
-                console.error("Polling error:", err);
-            }
-        }, 2000);
-    };
 
     const handleEndChat = async () => {
         if (!roomId) return;
