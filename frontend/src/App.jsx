@@ -17,7 +17,7 @@ function App() {
     const handleStartChat = async (nickname, topic) => {
         console.log("API URL:", `${backend}/start`);
         try {
-            const res = await fetch('${backend}/start' + {
+            const res = await fetch(`${backend}/start` + {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: nickname, topic })
