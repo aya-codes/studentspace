@@ -60,13 +60,11 @@ public class ChatController {
         Optional<ResponseEntity<Map<String, String>>> errorResponse = this.roomIssues(roomId);
         if (errorResponse.isPresent()) return errorResponse.get();
         System.out.println("Received message: " + rawMessage);
-
         if (roomManager.addMessage(roomId, rawMessage)) {
             Map<String, String> response = new HashMap<>();
             response.put("message", "Message sent");
             return ResponseEntity.ok(response);
         }
-
         return ResponseEntity.badRequest()
                 .body(Map.of("error", "Unfamiliar username or badly formatted message"));
     }

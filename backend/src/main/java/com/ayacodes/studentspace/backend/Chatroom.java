@@ -15,7 +15,7 @@ public class Chatroom {
     Topic topic;
     public List<Message> messages = new ArrayList<>();
     Boolean isClosed = false;
-    private static final Duration maxTimeOpen = Duration.ofMinutes(1);
+    private static final Duration maxTimeOpen = Duration.ofMinutes(20);
     private Instant chatStartedAt;
     private Instant chatEndedAt;
     private int finalMessageCount;
