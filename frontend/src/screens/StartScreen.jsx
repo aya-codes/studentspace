@@ -11,7 +11,7 @@ function StartScreen({ onStartChat }) {
     }
 
     return (
-        <div className="d-flex align-items-center justify-content-center vh-100">
+    <div className="d-flex align-items-center justify-content-center vh-100">
             <form onSubmit={handleSubmit} className="border p-4 rounded shadow bg-light"
                   style={{ minWidth: '800px' }}>
                 <h1 className="text-center mb-4"> Let's Chat </h1>

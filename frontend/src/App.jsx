@@ -15,7 +15,7 @@ function App() {
     const backend = import.meta.env.VITE_API_URL;
 
     const handleStartChat = async (nickname, topic) => {
-        console.log("API URL:", `${API_BASE}/chat/start`);
+        console.log("API URL:", '${backend}/start');
         try {
             const res = await fetch('${backend}/start', {
                 method: 'POST',
