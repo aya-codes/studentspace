@@ -1,13 +1,11 @@
 package com.ayacodes.studentspace.backend;
 
 public enum Topic {
-    Topic1,
-    Topic2,
-    Topic3
 //    SPORTS,
-//    FRIENDSHIP,
+    FRIENDSHIP,
 //    STUDIES,
-//    STRESS,
+    STRESS,
+    TEST
 //    HOMESICKNESS,
 //    POLITICS,
 //    RELIGION
