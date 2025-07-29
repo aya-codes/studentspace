@@ -12,9 +12,11 @@ function App() {
     const [roomId, setRoomId] = useState(null);
     const [expiresAt, setExpiresAt] = useState('');
 
+    const backend = import.meta.env.VITE_API_URL;
+
     const handleStartChat = async (nickname, topic) => {
         try {
-            const res = await fetch('http://localhost:8080/start', {
+            const res = await fetch('${backend}/start', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: nickname, topic })
@@ -32,7 +34,7 @@ function App() {
                 setScreen("waiting");
                 pollRoomStatus(roomId, () => {
                     // double check before entering
-                    fetch(`http://localhost:8080/status/${roomId}`).then(res => {
+                    fetch(`${backend}/status/${roomId}`).then(res => {
                         if (res.status === 410 || res.status === 404) {
                             setScreen("end");
                         } else {
@@ -50,7 +52,7 @@ function App() {
 
     const fetchExpiry = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/chat/${roomId}/expiry`);
+            const response = await fetch(`${backend}/chat/${roomId}/expiry`);
             console.log("Expiry API raw response:", response); // Debug
 
             if (response.status === 410 || response.status === 404) {

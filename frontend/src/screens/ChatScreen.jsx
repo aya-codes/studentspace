@@ -6,13 +6,15 @@ function ChatScreen({ roomId, nicknameOwn, topic, expiresAt, onEndChat, onReport
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
 
+    const backend = import.meta.env.VITE_API_URL;
+
     useEffect(() => {
         if (!roomId || !chatActive) return;
         let intervalId;
 
         async function fetchMessages() {
             try {
-                const response = await fetch(`https://studentspace.onrender.com/chat/${roomId}`);
+                const response = await fetch(`${backend}/chat/${roomId}`);
                 if (response.status === 410 || response.status === 404) {
                     onEndChat();
                     clearInterval(intervalId);
@@ -45,7 +47,7 @@ function ChatScreen({ roomId, nicknameOwn, topic, expiresAt, onEndChat, onReport
     const pollRoomStatus = () => {
         // double check before entering
         if (!roomId || !chatActive) return;
-        fetch(`https://studentspace.onrender.com/status/${roomId}`).then(res => {
+        fetch(`${backend}/status/${roomId}`).then(res => {
             if (res.status === 410 || res.status === 404) {
                 onEndChat();
             }
@@ -65,7 +67,7 @@ function ChatScreen({ roomId, nicknameOwn, topic, expiresAt, onEndChat, onReport
         try {
             if (!roomId || !chatActive) return;
             console.log("Sending:", { sender: nicknameOwn, body: newMessage });
-            const response = await fetch(`https://studentspace.onrender.com/chat/${roomId}`, {
+            const response = await fetch(`${backend}/chat/${roomId}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(messageObject)
