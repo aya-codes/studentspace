@@ -6,7 +6,9 @@ function WaitingScreen({ onCancelWait }) {
             <div className="text-center border p-5 rounded shadow bg-light">
                 <h1 className="mb-4 fs-1">Waiting for another user to join</h1>
                 <p> This may take some time </p>
-                <button onClick={onCancelWait}>Cancel</button>
+                <button onClick={onCancelWait} className="btn btn-danger">
+                    Cancel
+                </button>
             </div>
         </div>
     );

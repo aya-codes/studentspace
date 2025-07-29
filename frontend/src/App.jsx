@@ -27,7 +27,6 @@ function App() {
             setNicknameOwn(nickname);
             setTopic(topic);
 
-
             if (status === "ok") {
                 setScreen("chat");
             } else if (status === "waiting") {
@@ -84,14 +83,14 @@ function App() {
     }, [roomId, screen]);
 
 
-    const pollRoomStatus = (roomId, onReady) => {
+    const pollRoomStatus = (roomId) => {
+        if (screen !== 'waiting') return;
         const poll = setInterval(async () => {
             try {
                 const res = await fetch(`${backend}/status/${roomId}`);
                 const { status } = await res.json();
                 if (status === "ok") {
                     clearInterval(poll);
-                    onReady();
                 }
             } catch (err) {
                 console.error("Polling error:", err);
@@ -158,7 +157,7 @@ function App() {
     return (
         <>
             {screen === "start" && <StartScreen onStartChat={handleStartChat} />}
-            {screen === "waiting" && <WaitingScreen onCancelWait={handleEndChat()} />}
+            {screen === "waiting" && <WaitingScreen onCancelWait={handleEndChat} />}
             {screen === "chat" && <ChatScreen
                 roomId={roomId} nicknameOwn={nicknameOwn}
                 topic={topic} expiresAt={expiresAt}

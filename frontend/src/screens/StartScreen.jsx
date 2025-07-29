@@ -25,15 +25,18 @@ function StartScreen({ onStartChat }) {
                 <div className="mb-4">
                     <label htmlFor="topic-select" className="form-label">Choose your chat topic:</label>
                     <select onChange={(e) => setTopic(e.target.value)}
-                        required name="topic" id="topic-select" className="form-select">
+                            required name="topic" id="topic-select" className="form-select">
                         <option value=""></option>
-                        <option value="SPORTS">Sports</option>
-                        <option value="FRIENDSHIP">Friends</option>
-                        <option value="STUDIES">Studies</option>
-                        <option value="STRESS">Stress</option>
-                        <option value="HOMESICKNESS">Homesickness</option>
-                        <option value="POLITICS">Politics</option>
-                        <option value="RELIGION">Religion</option>
+                        <option value="Topic1">Topic 1</option>
+                        <option value="Topic2">Topic 2</option>
+                        <option value="Topic3">Topic 3</option>
+                        {/*<option value="SPORTS">Sports</option>*/}
+                        {/*<option value="FRIENDSHIP">Friends</option>*/}
+                        {/*<option value="STUDIES">Studies</option>*/}
+                        {/*<option value="STRESS">Stress</option>*/}
+                        {/*<option value="HOMESICKNESS">Homesickness</option>*/}
+                        {/*<option value="POLITICS">Politics</option>*/}
+                        {/*<option value="RELIGION">Religion</option>*/}
                     </select>
                 </div>
 
