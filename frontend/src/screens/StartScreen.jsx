@@ -27,9 +27,9 @@ function StartScreen({ onStartChat }) {
                     <select onChange={(e) => setTopic(e.target.value)}
                             required name="topic" id="topic-select" className="form-select">
                         <option value=""></option>
-                        <option value="Topic1">Topic 1</option>
-                        <option value="Topic2">Topic 2</option>
-                        <option value="Topic3">Topic 3</option>
+                        <option value="FRIENDSHIP">Friendship</option>
+                        <option value="STRESS">Stress</option>
+                        <option value="TEST">Website Testing</option>
                         {/*<option value="SPORTS">Sports</option>*/}
                         {/*<option value="FRIENDSHIP">Friends</option>*/}
                         {/*<option value="STUDIES">Studies</option>*/}
