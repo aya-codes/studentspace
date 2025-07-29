@@ -15,12 +15,14 @@ function App() {
     const backend = import.meta.env.VITE_API_URL;
 
     const handleStartChat = async (nickname, topic) => {
+        console.log("API URL:", `${API_BASE}/chat/start`);
         try {
             const res = await fetch('${backend}/start', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: nickname, topic })
             });
+            console.log("Starting chat...");
             if (!res.ok) return alert("Error: " + (await res.text()));
             const { roomId, status } = await res.json();
             setRoomId(roomId);
