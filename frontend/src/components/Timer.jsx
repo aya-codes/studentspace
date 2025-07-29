@@ -4,7 +4,6 @@ function Timer({ expiresAt, onExpire }) {
     const [timeLeft, setTimeLeft] = useState(0);
 
     useEffect(() => {
-        console.log("ExpiresAt received in Timer:", expiresAt);
         if (!expiresAt) {
             setTimeLeft(0);
             return;

@@ -58,7 +58,6 @@ function ChatScreen({ roomId, nicknameOwn, topic, expiresAt, onEndChat, onReport
         pollRoomStatus();
         if (!roomId || !chatActive) return;
         e.preventDefault();
-        console.log("Handle send");
         if (!newMessage.trim()) return;
         const messageObject = {
             sender: nicknameOwn,
@@ -66,7 +65,6 @@ function ChatScreen({ roomId, nicknameOwn, topic, expiresAt, onEndChat, onReport
         };
         try {
             if (!roomId || !chatActive) return;
-            console.log("Sending:", { sender: nicknameOwn, body: newMessage });
             const response = await fetch(`${backend}/chat/${roomId}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -74,7 +72,6 @@ function ChatScreen({ roomId, nicknameOwn, topic, expiresAt, onEndChat, onReport
             });
 
             const data = await response.json();
-            console.log("Response: ", data);
 
             if (!response.ok) {
                 alert("Error: " + (data.message || "Failed to send"));

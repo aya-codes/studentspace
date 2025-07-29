@@ -15,14 +15,12 @@ function App() {
     const backend = import.meta.env.VITE_API_URL;
 
     const handleStartChat = async (nickname, topic) => {
-        console.log("API URL:", `${backend}/start`);
         try {
             const res = await fetch(`${backend}/start`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username: nickname, topic })
             });
-            console.log("Starting chat...");
             if (!res.ok) return alert("Error: " + (await res.text()));
             const { roomId, status } = await res.json();
             setRoomId(roomId);
@@ -55,21 +53,17 @@ function App() {
     const fetchExpiry = async () => {
         try {
             const response = await fetch(`${backend}/chat/${roomId}/expiry`);
-            console.log("Expiry API raw response:", response); // Debug
 
             if (response.status === 410 || response.status === 404) {
                 await handleEndChat();
                 return;
             }
             const data = await response.json();
-            console.log("Expiry API parsed data:", data); // Debug
 
             if (data.status === "waiting") {
-                console.log("Still waiting for match");
                 return;
             }
             if (data.expiry) {
-                console.log("Setting expiry to:", data.expiry);
                 setExpiresAt(Number(data.expiry));
             } else {
                 console.warn("No expiry field in response!");
@@ -106,7 +100,7 @@ function App() {
     };
 
     const handleEndChat = async () => {
-        if (!roomId || screen !== 'chat') return;
+        if (!roomId) return;
         try {
             const response = await fetch(`${backend}/chat/${roomId}/end`);
             setScreen("end");
@@ -164,7 +158,7 @@ function App() {
     return (
         <>
             {screen === "start" && <StartScreen onStartChat={handleStartChat} />}
-            {screen === "waiting" && <WaitingScreen />}
+            {screen === "waiting" && <WaitingScreen onCancelWait={handleEndChat()} />}
             {screen === "chat" && <ChatScreen
                 roomId={roomId} nicknameOwn={nicknameOwn}
                 topic={topic} expiresAt={expiresAt}
