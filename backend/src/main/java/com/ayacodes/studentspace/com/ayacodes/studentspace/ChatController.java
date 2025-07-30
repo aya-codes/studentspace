@@ -1,9 +1,15 @@
 package com.ayacodes.studentspace;
 
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -99,7 +105,7 @@ public class ChatController {
     }
 
     @GetMapping("/archive")
-    public ResponseEntity<Resource> downloadArchive() throws IOException {
+    public ResponseEntity<InputStreamResource> downloadArchive() throws IOException {
         File file = new File("chat-archive.jsonl");
         if (!file.exists()) {
             return ResponseEntity.notFound().build();

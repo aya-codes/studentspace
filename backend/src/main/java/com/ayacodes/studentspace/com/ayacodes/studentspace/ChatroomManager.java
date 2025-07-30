@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.ayacodes.studentspace.backend.RoomStatus.*;
+import static com.ayacodes.studentspace.RoomStatus.*;
 
 @Service
 public class ChatroomManager {
