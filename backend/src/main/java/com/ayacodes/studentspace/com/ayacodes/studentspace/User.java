@@ -1,4 +1,4 @@
-package com.ayacodes.studentspace.backend;
+package com.ayacodes.studentspace;
 
 public class User {
     String username;

@@ -1,10 +1,10 @@
+package com.ayacodes.studentspace;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Component;
 
 import java.io.FileWriter;
 import java.io.IOException;
 
-@Component
 public class ArchiveLogger {
 
     private final ObjectMapper objectMapper = new ObjectMapper();

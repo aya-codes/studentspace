@@ -1,10 +1,9 @@
-package com.ayacodes.studentspace.backend;
+package com.ayacodes.studentspace;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
