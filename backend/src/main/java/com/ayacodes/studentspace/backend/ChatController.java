@@ -98,6 +98,19 @@ public class ChatController {
         return ResponseEntity.ok(Map.of("expiry", roomManager.expirationTime(roomId)));
     }
 
+    @GetMapping("/archive")
+    public ResponseEntity<Resource> downloadArchive() throws IOException {
+        File file = new File("chat-archive.jsonl");
+        if (!file.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=chat-archive.jsonl")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(resource);
+    }
+
     private Optional<ResponseEntity<Map<String, String>>> resolveUserIssue(User user) {
         if (user.username.isBlank()) {
             return Optional.of(ResponseEntity.badRequest()
