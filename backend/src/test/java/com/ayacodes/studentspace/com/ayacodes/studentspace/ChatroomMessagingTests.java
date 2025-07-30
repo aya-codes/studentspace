@@ -1,4 +1,4 @@
-package com.ayacodes.studentspace.backend;
+package com.ayacodes.studentspace;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

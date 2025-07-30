@@ -1,4 +1,4 @@
-package com.ayacodes.studentspace.backend;
+package com.ayacodes.studentspace;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

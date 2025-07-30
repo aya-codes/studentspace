@@ -1,4 +1,4 @@
-package com.ayacodes.studentspace.backend;
+package com.ayacodes.studentspace;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

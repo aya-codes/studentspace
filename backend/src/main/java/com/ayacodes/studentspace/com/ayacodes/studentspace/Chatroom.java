@@ -1,4 +1,4 @@
-package com.ayacodes.studentspace.backend;
+package com.ayacodes.studentspace;
 
 import java.time.Duration;
 import java.time.Instant;
