@@ -12,7 +12,7 @@ import static com.ayacodes.studentspace.backend.RoomStatus.*;
 public class ChatroomManager {
     private final Map<String, Chatroom> rooms = new HashMap<>();
     private final Map<String, ArchivedChatroom> archivedRooms = new HashMap<>();
-    private final ArchiveLogger archiveLogger = new ArchiveLogger;
+    private final ArchiveLogger archiveLogger = new ArchiveLogger();
 
     public RoomStatus getRoomStatus(String roomId) {
         if (rooms.isEmpty()) return NOT_FOUND;
