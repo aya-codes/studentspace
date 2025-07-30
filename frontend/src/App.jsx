@@ -40,7 +40,6 @@ function App() {
     };
 
     const pollRoomStatus = (roomId) => {
-        if (screen !== 'waiting') return;
         const poll = setInterval(async () => {
             try {
                 const res = await fetch(`${backend}/status/${roomId}`);
