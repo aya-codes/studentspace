@@ -1,6 +1,6 @@
 package com.ayacodes.studentspace;
 
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -8,10 +8,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import static com.ayacodes.studentspace.RoomStatus.WAITING;
 
 @CrossOrigin(origins = "https://studentspace.onrender.com")
 @RestController
@@ -25,12 +29,14 @@ public class ChatController {
 
     @PostMapping("/start")
     public ResponseEntity<Map<String, String>> matchUserToRoom(@RequestBody User user) {
-        Optional<ResponseEntity<Map<String, String>>> errorResponse = this.resolveUserIssue(user);
+        Optional<ResponseEntity<Map<String, String>>> errorResponse = resolveUserIssue(user);
         if (errorResponse.isPresent()) return errorResponse.get();
+        System.out.println("Matching user: " + user.getUsername() + " Topic: " + user.getTopic());
+
         String roomId = roomManager.findAvailableRoom(user);
         this.waitingUsers.remove(user);
         Map<String, String> response = new HashMap<>();
-        if (roomManager.getRoomStatus(roomId).equals(RoomStatus.WAITING)) {
+        if (roomManager.getRoomStatus(roomId).equals(WAITING)) {
             response.put("status", "waiting");
         }
         else response.put("status", "ok");
@@ -42,7 +48,8 @@ public class ChatController {
     public ResponseEntity<Map<String, String>> getRoomStatus(@PathVariable String roomId) {
         Optional<ResponseEntity<Map<String, String>>> errorResponse = this.roomIssues(roomId);
         if (errorResponse.isPresent()) return errorResponse.get();
-        if (roomManager.getRoomStatus(roomId).equals(RoomStatus.WAITING)) {
+        System.out.println("Room ID: " + roomId + " Status: " + roomManager.getRoomStatus(roomId));
+        if (roomManager.getRoomStatus(roomId) == WAITING) {
             return new ResponseEntity<>(Map.of("status", "waiting"), HttpStatus.OK);
         }
         return new ResponseEntity<>(Map.of("status", "ok"), HttpStatus.OK);
@@ -97,22 +104,26 @@ public class ChatController {
     private ResponseEntity<Map<String, String>> getExpirationTime(@PathVariable String roomId) {
         Optional<ResponseEntity<Map<String, String>>> errorResponse = this.roomIssues(roomId);
         if (errorResponse.isPresent()) return errorResponse.get();
-        if (roomManager.getRoomStatus(roomId).equals(RoomStatus.WAITING)) {
+        if (roomManager.getRoomStatus(roomId).equals(WAITING)) {
             return ResponseEntity.ok(Map.of("status", "waiting"));
         }
         return ResponseEntity.ok(Map.of("expiry", roomManager.expirationTime(roomId)));
     }
 
-    @GetMapping("/archive")
+    @GetMapping("/archives")
     public ResponseEntity<Resource> downloadFile() throws IOException {
-        FileSystemResource resource = new FileSystemResource("path/to/file.txt");
+        File file = new File("logs/chat_log.txt");
+        if (!file.exists()) {
+            return ResponseEntity.notFound().build();
+        }
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + resource.getFilename())
-                .contentLength(resource.contentLength())
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + file.getName() + "\"")
+                .contentType(MediaType.TEXT_PLAIN)
+                .contentLength(file.length())
                 .body(resource);
     }
-
 
     private Optional<ResponseEntity<Map<String, String>>> resolveUserIssue(User user) {
         if (user.username.isBlank()) {
