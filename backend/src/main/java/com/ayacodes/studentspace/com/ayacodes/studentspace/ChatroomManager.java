@@ -14,6 +14,10 @@ public class ChatroomManager {
     private final Map<String, ArchivedChatroom> archivedRooms = new HashMap<>();
     private final ArchiveLogger archiveLogger = new ArchiveLogger();
 
+    public ChatroomManager() {
+        System.out.println("RoomManager created: " + this);
+    }
+
     public RoomStatus getRoomStatus(String roomId) {
         if (rooms.isEmpty()) return NOT_FOUND;
         Chatroom room = rooms.get(roomId);
