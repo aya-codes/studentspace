@@ -14,12 +14,4 @@ public class StudentSpaceApplication {
         SpringApplication.run(StudentSpaceApplication.class, args);
     }
 
-    @Bean
-    public static CommandLineRunner printEndpoints(ApplicationContext ctx) {
-        return args -> {
-            RequestMappingHandlerMapping mapping = ctx.getBean(RequestMappingHandlerMapping.class);
-            mapping.getHandlerMethods().forEach((key, value) -> System.out.println(key));
-        };
-    }
-
 }

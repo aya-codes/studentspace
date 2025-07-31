@@ -109,21 +109,21 @@ public class ChatController {
         }
         return ResponseEntity.ok(Map.of("expiry", roomManager.expirationTime(roomId)));
     }
-
     @GetMapping("/archives")
     public ResponseEntity<Resource> downloadFile() throws IOException {
         File file = new File("logs/chat_log.txt");
         if (!file.exists()) {
-            return ResponseEntity.notFound().build();
+            file.getParentFile().mkdirs();
+            file.createNewFile(); // create empty file if missing
         }
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment; filename=\"" + file.getName() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
                 .contentType(MediaType.TEXT_PLAIN)
                 .contentLength(file.length())
                 .body(resource);
     }
+
 
     private Optional<ResponseEntity<Map<String, String>>> resolveUserIssue(User user) {
         if (user.username.isBlank()) {
