@@ -3,6 +3,11 @@ package com.ayacodes.studentspace;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,14 +24,51 @@ public class ChatroomManager {
     }
 
     public RoomStatus getRoomStatus(String roomId) {
-        if (rooms.isEmpty()) return NOT_FOUND;
+        if (rooms.isEmpty()) {
+            System.out.println("RoomManager is empty");
+            return NOT_FOUND;
+        }
         Chatroom room = rooms.get(roomId);
-        if (room == null) return NOT_FOUND;
-        if (room.isExpired()) this.closeRoom(roomId, false);
-        if (room.isClosed) return CLOSED;
-        if (!room.atCapacity) return WAITING;
+        if (room == null) {
+            System.out.println("Couldnt find room with id: " + roomId);
+            return NOT_FOUND;
+        }
+        if (room.isExpired()) {
+            System.out.println("Room is expired");
+            this.closeRoom(roomId, false);
+        }
+        if (room.isClosed) {
+            System.out.println("Room is closed");
+            return CLOSED;
+        }
+        if (!room.atCapacity) {
+            System.out.println("Room is not yet at capacity");
+            return WAITING;
+        }
+        System.out.println("Room ready");
         return OK;
     }
+
+    public File generateArchiveLogFile() throws IOException {
+        File file = new File("chat_log.txt");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
+            for (ArchivedChatroom archived : archivedRooms.values()) {
+                writer.write("=== Chatroom: " + archived.roomId() + " ===\n");
+                writer.write("Topic: " + archived.topic().name() + "\n");
+                writer.write("Max Time Open: " + archived.maxTimeOpen() + "\n");
+                writer.write("Started At: " + archived.chatStartedAt() + "\n");
+                writer.write("Ended At: " + archived.chatEndedAt() + "\n");
+                writer.write("Final Message Count: " + archived.finalMessageCount() + "\n");
+                writer.write("Closed By User: " + archived.closedByUser() + "\n");
+                writer.write("Report Submitted: " + archived.reportSubmitted() + "\n");
+                writer.write("Report Reason: " + archived.reportReason().orElse("None") + "\n");
+                writer.write("\n");
+            }
+        }
+        return file;
+    }
+
 
     public ArchivedChatroom reportAndCloseRoom(String roomId, String reportReason) {
         Chatroom room = rooms.get(roomId);
@@ -87,5 +129,9 @@ public class ChatroomManager {
         Chatroom room = rooms.get(roomId);
         if (room.messages.isEmpty()) return null;
         return room.getMessageString();
+    }
+
+    public Map<String, ArchivedChatroom> getArchivedRooms() {
+        return archivedRooms;
     }
 }

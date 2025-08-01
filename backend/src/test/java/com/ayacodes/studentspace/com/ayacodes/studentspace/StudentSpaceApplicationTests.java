@@ -3,6 +3,7 @@ package com.ayacodes.studentspace;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,10 +11,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.io.File;
+
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -21,6 +24,23 @@ class YourApplicationTests {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Spy
+    private ChatroomManager roomManager;
+
+    @Test
+    public void testDownloadArchives() throws Exception {
+        File dummyFile = new File("chat_log.txt");
+        java.nio.file.Files.write(dummyFile.toPath(), "Test archive content".getBytes());
+
+        when(roomManager.generateArchiveLogFile()).thenReturn(dummyFile);
+
+        mockMvc.perform(get("/archives"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Disposition", "attachment; filename=\"chat_log.txt\""))
+                .andExpect(content().contentType(MediaType.TEXT_PLAIN));
+    }
+
 
     @Test
     void matchUser_statusTransitionsFromWaitingToOk() throws Exception {

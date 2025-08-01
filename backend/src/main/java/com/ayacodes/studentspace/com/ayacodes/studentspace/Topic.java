@@ -5,7 +5,7 @@ public enum Topic {
     FRIENDSHIP,
 //    STUDIES,
     STRESS,
-    TEST
+    TEST;
 //    HOMESICKNESS,
 //    POLITICS,
 //    RELIGION

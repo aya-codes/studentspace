@@ -31,9 +31,11 @@ public class ChatController {
     public ResponseEntity<Map<String, String>> matchUserToRoom(@RequestBody User user) {
         Optional<ResponseEntity<Map<String, String>>> errorResponse = resolveUserIssue(user);
         if (errorResponse.isPresent()) return errorResponse.get();
-        System.out.println("Matching user: " + user.getUsername() + " Topic: " + user.getTopic());
 
         String roomId = roomManager.findAvailableRoom(user);
+        if (roomId == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to assign room"));
+        }
         this.waitingUsers.remove(user);
         Map<String, String> response = new HashMap<>();
         if (roomManager.getRoomStatus(roomId).equals(WAITING)) {
@@ -109,16 +111,15 @@ public class ChatController {
         }
         return ResponseEntity.ok(Map.of("expiry", roomManager.expirationTime(roomId)));
     }
+
     @GetMapping("/archives")
     public ResponseEntity<Resource> downloadFile() throws IOException {
-        File file = new File("logs/chat_log.txt");
-        if (!file.exists()) {
-            file.getParentFile().mkdirs();
-            file.createNewFile(); // create empty file if missing
-        }
+        File file = roomManager.generateArchiveLogFile();
+
         InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + file.getName() + "\"")
                 .contentType(MediaType.TEXT_PLAIN)
                 .contentLength(file.length())
                 .body(resource);
