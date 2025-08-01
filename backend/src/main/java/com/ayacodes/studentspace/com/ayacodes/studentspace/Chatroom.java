@@ -76,11 +76,15 @@ public class Chatroom {
     public boolean isExpired() {
         if (chatStartedAt == null) return false;
         boolean expired = this.timeElapsed().compareTo(maxTimeOpen) > 0;
-        if (expired) {
-            this.closeRoom();
-        }
+        System.out.println("[DEBUG] Room " + roomId
+                + " expired? " + expired
+                + " (Started: " + chatStartedAt
+                + ", Max: " + maxTimeOpen
+                + ", Now: " + Instant.now() + ")");
+        if (expired) this.closeRoom();
         return expired;
     }
+
 
     public Boolean isAvailable() {
         if (this.atCapacity) return false;
