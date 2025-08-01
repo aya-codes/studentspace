@@ -65,6 +65,7 @@ public class ChatroomManager {
                 if (archived.reportSubmitted() && archived.reportReason() != null) {
                     writer.write("Report Reason: " + archived.reportReason().get() + "\n");
                 }
+                else writer.write("Report Reason: None\n");
                 writer.write("\n");
             }
         }
