@@ -62,7 +62,9 @@ public class ChatroomManager {
                 writer.write("Final Message Count: " + archived.finalMessageCount() + "\n");
                 writer.write("Closed By User: " + archived.closedByUser() + "\n");
                 writer.write("Report Submitted: " + archived.reportSubmitted() + "\n");
-                writer.write("Report Reason: " + archived.reportReason().orElse("None") + "\n");
+                if (archived.reportSubmitted() && archived.reportReason() != null) {
+                    writer.write("Report Reason: " + archived.reportReason().get() + "\n");
+                }
                 writer.write("\n");
             }
         }
