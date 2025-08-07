@@ -10,6 +10,7 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class DropboxUploader {
     String appKey = "ew1c8btx6tabn9d";
     String appSecret = "n71br5p8no3kws8";
