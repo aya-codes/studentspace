@@ -1,5 +1,10 @@
 package com.ayacodes.studentspace;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +33,11 @@ import static com.ayacodes.studentspace.RoomStatus.WAITING;
 public class ChatController {
     private final Queue<User> waitingUsers = new ConcurrentLinkedQueue<>();
     private final ChatroomManager roomManager;
+    private final DropboxUploader dropboxUploader;
 
-    public ChatController(ChatroomManager roomManager) {
+    public ChatController(ChatroomManager roomManager, DropboxUploader dropboxUploader) {
         this.roomManager = roomManager;
+        this.dropboxUploader = dropboxUploader;
     }
 
     @PostMapping("/start")
@@ -95,7 +102,8 @@ public class ChatController {
         if (errorResponse.isPresent()) return errorResponse.get();
 
         roomManager.closeRoom(roomId, true);
-        this.archiveAndUploadChat(roomId);
+        File fileToUpload = roomManager.generateArchiveLogFile(roomId);
+        dropboxUploader.archiveAndUploadChat(fileToUpload);
         return ResponseEntity.ok(Map.of("message", "Closed chatroom"));
     }
 
@@ -105,7 +113,8 @@ public class ChatController {
         if (errorResponse.isPresent()) return errorResponse.get();
 
         roomManager.reportAndCloseRoom(roomId, reportReason);
-        this.archiveAndUploadChat(roomId);
+        File fileToUpload = roomManager.generateArchiveLogFile(roomId);
+        dropboxUploader.archiveAndUploadChat(fileToUpload);
         return ResponseEntity.ok(Map.of("message", "Submitted report and closed chatroom"));
     }
 
@@ -118,42 +127,6 @@ public class ChatController {
             return ResponseEntity.ok(Map.of("status", "waiting"));
         }
         return ResponseEntity.ok(Map.of("expiry", roomManager.expirationTime(roomId)));
-    }
-
-    public void archiveAndUploadChat(String roomId) throws IOException {
-        File file = roomManager.generateArchiveLogFile(roomId);
-        String accessToken = "sl.u.AF41sI9UWyng9pLZ2_ZI2ehXDe8KG9Xl8oOvvujXWeusr09HVANAFp3c9amJgOYwJrsYnjDFAqz_9fzH4h7spWH479nKFtKn6GYglPGUl5H-pjqdnxcAfjBK2Y4P5JkwAdtlgodKlPHqj_4pzN3c9EaYiJaBx8NQ92hkJ4DdA2O1v6bgxAmjqicpTa9VpKYiD2BKBX8PsFYJth4hzqN00NSBhDDZBUBCQ2NIBJBznHLx9Smd--30-ei1OP60XubpENzTgtUZbcTc-Xlla4PxelCCzNokbH4JSuI3CORNINPgQV3nvbkPcOWbgZyg3Kkf_kl6iPHZ9MFglFU7gLoOKQKlzqJy3YUOOoUdwBzwYEYH5nsVokAxAUc3gSKkuXIwKX7ooRTuPZ5D8FSAc04MVF7WzK2XkvXwL743eFnsJIqroiDX65xGV0i4vs0Uz38pXCfDRZT5NNqpOFBIHgEP28MJk6lG51bXlJDmIYY4rU_mmJNDSD_qzwcB3QGB52sX6fsfTJegw_1HQEpOH6jCBshhiG4qqn5JlYGUgYIsIl4kB4TmszERvLW3BMq-m2twzsYh8xXRoB-_-94gonAikXcfVNK2yKzwx_-5zfZ6taTDvdWmGuo9WnlTLBH6CZ3-dEJdxZKk3c-YCphdu-c3SPxwevpHKhqYzF-3XT5dXdeBTJmnRuYZCo2hJTxUd9RdKWxmEEvxwsTnA3nuEFYzf5_CS-EcnD6pafRalhCnnLzYE6s7kx7Rkv6NRQJivqfINpplwbQy8nyvh9v-8Xl6Z_61qKck3yFjazDe61FKYpdw7EvpdgOko7aEsw4Ge4P8MNhAICyJKgsIkOC91ri9EEliXJkwRKBfNJMBV8CcscAKUvzRhUIfDwcndIPMt5kocELU4WInEz5r_cxer5YLwcl7tdBalQj3yxvtv6LtsaS0KQQF6lJGOE4W_yxRZrB4q_hY8gscILtDKEG2nJl1vt-Xezrgbjwr9zkjmi8X7L2EDzG20e67rwQoPUtTVETgcdJO7GtB3WWQFeLPO7LEslgkcSLad17gqucXnX_aVmV-R_y1MOe_a0etyaZwWGji_XAKSnd0-S1vcPKcYcsSfRQydmr0jW8wo6MrXuln2LrQGp16ddSCRGBj2i31xZvYu4fdL3yQTC_beVhoaIpepbDGey_M_PLFj4dTbSPY-iHeL6-c6Al9s7Ds8o-yYgWP3BUfgCvDPW0N85zLU2msyVIQ8AgvNHqtLPQne14_onke4BxbRa-oFePnUPyD12rsmpnlpOSAyMPj9_VqGzYfYnfS";
-        String dropboxUploadUrl = "https://content.dropboxapi.com/2/files/upload";
-
-        HttpPost post = new HttpPost(dropboxUploadUrl);
-        post.setHeader("Authorization", "Bearer " + accessToken);
-        post.setHeader("Dropbox-API-Arg", "{\"path\": \"/Apps/StudentSpace/" +
-                file.getName() + "\",\"mode\": \"add\",\"autorename\": true,\"mute\": false}");
-        post.setHeader("Content-Type", "application/octet-stream");
-
-        try (FileInputStream fileInputStream = new FileInputStream(file)) {
-            byte[] fileBytes = fileInputStream.readAllBytes();
-            post.setEntity(new ByteArrayEntity(fileBytes));
-        }
-
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse response = httpClient.execute(post)) {
-
-            int statusCode = response.getStatusLine().getStatusCode();
-            String responseBody = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))
-                    .lines().collect(Collectors.joining("\n"));
-
-            if (statusCode == 200) {
-                System.out.println("Upload successful: " + responseBody);
-            } else {
-                System.err.println("Upload failed with status: " + statusCode);
-                System.err.println("Response: " + responseBody);
-            }
-            file.delete();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 
