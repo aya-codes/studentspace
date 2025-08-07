@@ -7,7 +7,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,25 +48,31 @@ public class ChatroomManager {
         return OK;
     }
 
-    public File generateArchiveLogFile() throws IOException {
-        File file = new File("chat_log.txt");
+    public File generateArchiveLogFile(String roomId) throws IOException {
+        ArchivedChatroom archived = archivedRooms.get(roomId);
+        String timestamp = java.time.LocalDateTime.now()
+                .toString()
+                .replace(":", "-")
+                .replace(".", "-");  // Safe for filenames
+
+        String filename = "chatlog_" + roomId + "_" + timestamp + ".txt";
+        File file = new File(filename);
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
-            for (ArchivedChatroom archived : archivedRooms.values()) {
-                writer.write("=== Chatroom: " + archived.roomId() + " ===\n");
-                writer.write("Topic: " + archived.topic().name() + "\n");
-                writer.write("Max Time Open: " + archived.maxTimeOpen() + "\n");
-                writer.write("Started At: " + archived.chatStartedAt() + "\n");
-                writer.write("Ended At: " + archived.chatEndedAt() + "\n");
-                writer.write("Final Message Count: " + archived.finalMessageCount() + "\n");
-                writer.write("Closed By User: " + archived.closedByUser() + "\n");
-                writer.write("Report Submitted: " + archived.reportSubmitted() + "\n");
-                if (archived.reportSubmitted() && archived.reportReason() != null) {
-                    writer.write("Report Reason: " + archived.reportReason().get() + "\n");
-                }
-                else writer.write("Report Reason: None\n");
-                writer.write("\n");
+            writer.write("=== Chatroom: " + archived.roomId() + " ===\n");
+            writer.write("Topic: " + archived.topic().name() + "\n");
+            writer.write("Max Time Open: " + archived.maxTimeOpen() + "\n");
+            writer.write("Started At: " + archived.chatStartedAt() + "\n");
+            writer.write("Ended At: " + archived.chatEndedAt() + "\n");
+            writer.write("Messages: " + archived.messages() + "\n");
+            writer.write("Final Message Count: " + archived.finalMessageCount() + "\n");
+            writer.write("Closed By User: " + archived.closedByUser() + "\n");
+            writer.write("Report Submitted: " + archived.reportSubmitted() + "\n");
+            if (archived.reportSubmitted() && archived.reportReason() != null) {
+                writer.write("Report Reason: " + archived.reportReason().get() + "\n");
             }
+            else writer.write("Report Reason: None\n");
+            writer.write("\n");
         }
         return file;
     }

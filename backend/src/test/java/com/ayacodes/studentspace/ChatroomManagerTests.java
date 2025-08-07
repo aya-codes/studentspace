@@ -20,6 +20,7 @@ public class ChatroomManagerTests {
                 Duration.ofMinutes(30),
                 Instant.parse("2025-07-31T10:00:00Z"),
                 Instant.parse("2025-07-31T10:25:00Z"),
+                new ArrayList<Message>(),
                 12,
                 true,
                 true,
@@ -30,7 +31,7 @@ public class ChatroomManagerTests {
         manager.getArchivedRooms().put("room1", archived);
 
         // Generate log file
-        File logFile = manager.generateArchiveLogFile();
+        File logFile = manager.generateArchiveLogFile(archived.roomId());
 
         assertTrue(logFile.exists(), "Log file should be created");
 

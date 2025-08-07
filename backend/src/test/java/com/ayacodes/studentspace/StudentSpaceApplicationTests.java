@@ -1,6 +1,5 @@
 package com.ayacodes.studentspace;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Spy;
@@ -33,7 +32,7 @@ class YourApplicationTests {
         File dummyFile = new File("chat_log.txt");
         java.nio.file.Files.write(dummyFile.toPath(), "Test archive content".getBytes());
 
-        when(roomManager.generateArchiveLogFile()).thenReturn(dummyFile);
+        when(roomManager.generateArchiveLogFile("0")).thenReturn(dummyFile);
 
         mockMvc.perform(get("/archives"))
                 .andExpect(status().isOk())
