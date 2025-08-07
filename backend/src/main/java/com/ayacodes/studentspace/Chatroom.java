@@ -43,6 +43,7 @@ public class Chatroom {
                 maxTimeOpen,
                 this.chatStartedAt,
                 this.chatEndedAt,
+                this.messages,
                 this.finalMessageCount,
                 this.atCapacity,
                 this.reportSubmitted,

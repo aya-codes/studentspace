@@ -2,6 +2,7 @@ package com.ayacodes.studentspace;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 public record ArchivedChatroom (
@@ -10,6 +11,7 @@ public record ArchivedChatroom (
         Duration maxTimeOpen,
         Instant chatStartedAt,
         Instant chatEndedAt,
+        List<Message> messages,
         int finalMessageCount,
         boolean closedByUser,
         boolean reportSubmitted,
