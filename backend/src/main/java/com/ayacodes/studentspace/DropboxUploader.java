@@ -31,7 +31,7 @@ public class DropboxUploader {
 
         HttpPost post = new HttpPost(dropboxUploadUrl);
         post.setHeader("Authorization", "Bearer " + accessToken);
-        post.setHeader("Dropbox-API-Arg", "{\"path\": \"" +
+        post.setHeader("Dropbox-API-Arg", "{\"path\": \"/" +
                 file.getName() + "\",\"mode\": \"add\",\"autorename\": true,\"mute\": false}");
         post.setHeader("Content-Type", "application/octet-stream");
 
