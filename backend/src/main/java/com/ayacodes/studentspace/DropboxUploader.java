@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class DropboxUploader {
     String appKey = "ew1c8btx6tabn9d";
     String appSecret = "n71br5p8no3kws8";
-***REMOVED***
+    String refreshToken = "SgJYfCJGhpgAAAAAAAAAAWoQe9lz30xDBVZQexMK-BOod3VEolnkDsfp4GaoVqwk";
     String tokenUrl = "https://api.dropbox.com/oauth2/token";
 
     public void archiveAndUploadChat(File file) throws IOException {
@@ -31,7 +31,7 @@ public class DropboxUploader {
 
         HttpPost post = new HttpPost(dropboxUploadUrl);
         post.setHeader("Authorization", "Bearer " + accessToken);
-        post.setHeader("Dropbox-API-Arg", "{\"path\": \"" +
+        post.setHeader("Dropbox-API-Arg", "{\"path\": \"/" +
                 file.getName() + "\",\"mode\": \"add\",\"autorename\": true,\"mute\": false}");
         post.setHeader("Content-Type", "application/octet-stream");
 
