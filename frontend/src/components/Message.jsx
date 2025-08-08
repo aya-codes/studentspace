@@ -6,7 +6,7 @@ function Message({ sender, text, timestamp, isOwn }) {
 
     return (
         <div className={`d-flex ${isOwn ? 'justify-content-end' : 'justify-content-start'} mb-2`}>
-            <div className={`p-2 rounded shadow-sm text-white`}
+            <div className={`p-2 rounded shadow-sm text-black`}
                 style={{
                     maxWidth: '60%', minWidth: '40%', wordBreak: "break-word",
                     backgroundColor: isOwn ? 'lightgreen' : 'lightblue',
