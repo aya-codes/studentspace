@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 @Service
 public class DropboxUploader {
     String appKey = "ew1c8btx6tabn9d";
-    String appSecret = "n71br5p8no3kws8";
-    String refreshToken = "SgJYfCJGhpgAAAAAAAAAAWoQe9lz30xDBVZQexMK-BOod3VEolnkDsfp4GaoVqwk";
+    public static final String appSecret = System.getenv("DROPBOX_APP_SECRET");
+    public static final String refreshToken = System.getenv("DROPBOX_REFRESH_TOKEN");
     String tokenUrl = "https://api.dropbox.com/oauth2/token";
 
     public void archiveAndUploadChat(File file) throws IOException {
