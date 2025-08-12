@@ -18,6 +18,7 @@ public class Chatroom {
     private static final Duration maxTimeOpen = Duration.ofMinutes(20);
     private Instant chatStartedAt;
     private Instant chatEndedAt;
+    private int toxicMessageCount = 0;
     private int finalMessageCount;
     public boolean closedByUser;
     private boolean reportSubmitted;
@@ -25,6 +26,10 @@ public class Chatroom {
 
     public Chatroom() {
         this.chatStartedAt = Instant.now();
+    }
+
+    public void incrementToxicMessageCount() {
+        toxicMessageCount++;
     }
 
     public void setReport(String reportReason) {
@@ -44,6 +49,7 @@ public class Chatroom {
                 this.chatStartedAt,
                 this.chatEndedAt,
                 this.messages,
+                this.toxicMessageCount,
                 this.finalMessageCount,
                 this.atCapacity,
                 this.reportSubmitted,
@@ -116,11 +122,17 @@ public class Chatroom {
         return messagesString.toString();
     }
 
-    public boolean addRawMessage(RawMessage rawMessage) {
+    public boolean addRawMessage(RawMessage rawMessage, boolean messageWasFlagged) {
         if (rawMessage.sender().isBlank() || rawMessage.body().isBlank()) {
             return false;
         }
-        Message message = new Message(rawMessage.sender(), rawMessage.body(), Instant.now());
+        String messageBody;
+        if (messageWasFlagged) {
+            this.incrementToxicMessageCount();
+            messageBody = "FLAGGED: " + rawMessage.body();
+        }
+        else messageBody = rawMessage.body();
+        Message message = new Message(rawMessage.sender(), messageBody, Instant.now());
         return this.addMessage(message);
     }
 

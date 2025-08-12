@@ -126,11 +126,11 @@ public class ChatroomManager {
 
     public boolean addMessage(String roomId, RawMessage rawMessage) {
         Chatroom room = rooms.get(roomId);
-        if (checkMessageToxicity(rawMessage)) return room.addRawMessage(rawMessage);
-        else return false;
+        boolean flagged = isToxicMessage(rawMessage);
+        return room.addRawMessage(rawMessage, flagged);
     }
 
-    private boolean checkMessageToxicity(RawMessage rawMessage) {
+    private boolean isToxicMessage(RawMessage rawMessage) {
         String message = rawMessage.body();
         return messageChecker.getToxicityScore(message) <= 0.7;
     }
