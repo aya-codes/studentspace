@@ -21,6 +21,7 @@ public class ChatroomManagerTests {
                 Instant.parse("2025-07-31T10:00:00Z"),
                 Instant.parse("2025-07-31T10:25:00Z"),
                 new ArrayList<Message>(),
+                2,
                 12,
                 true,
                 true,

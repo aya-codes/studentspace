@@ -66,6 +66,7 @@ public class ChatroomManager {
             writer.write("Started At: " + archived.chatStartedAt() + "\n");
             writer.write("Ended At: " + archived.chatEndedAt() + "\n");
             writer.write("Messages: " + archived.messages() + "\n");
+            writer.write("Toxic Message Count: " + archived.toxicMessageCount() + "\n");
             writer.write("Final Message Count: " + archived.finalMessageCount() + "\n");
             writer.write("Closed By User: " + archived.closedByUser() + "\n");
             writer.write("Report Submitted: " + archived.reportSubmitted() + "\n");

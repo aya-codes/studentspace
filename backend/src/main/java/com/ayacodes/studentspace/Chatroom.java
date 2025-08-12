@@ -18,7 +18,7 @@ public class Chatroom {
     private static final Duration maxTimeOpen = Duration.ofMinutes(20);
     private Instant chatStartedAt;
     private Instant chatEndedAt;
-    private int toxicMessageCount = 0;
+    private int toxicMessageCount;
     private int finalMessageCount;
     public boolean closedByUser;
     private boolean reportSubmitted;
@@ -26,10 +26,11 @@ public class Chatroom {
 
     public Chatroom() {
         this.chatStartedAt = Instant.now();
+        this.toxicMessageCount = 0;
     }
 
     public void incrementToxicMessageCount() {
-        toxicMessageCount++;
+        this.toxicMessageCount++;
     }
 
     public void setReport(String reportReason) {
