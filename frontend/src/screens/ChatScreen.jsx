@@ -74,7 +74,7 @@ function ChatScreen({ roomId, nicknameOwn, topic, expiresAt, onEndChat, onReport
             const data = await response.json();
 
             if (!response.ok) {
-                alert("Error: " + (data.message || "Failed to send"));
+                alert("Alert: " + (data.error));
                 return;
             }
             setNewMessage('');
