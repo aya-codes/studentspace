@@ -93,7 +93,7 @@ public class ChatController {
             return ResponseEntity.ok(response);
         }
         return ResponseEntity.badRequest()
-                .body(Map.of("error", "Unfamiliar username or badly formatted message"));
+                .body(Map.of("error", "Toxic Message"));
     }
 
     @GetMapping("/chat/{roomId}/end")

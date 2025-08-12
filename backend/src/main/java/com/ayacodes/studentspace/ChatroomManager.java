@@ -17,6 +17,7 @@ public class ChatroomManager {
     private final Map<String, Chatroom> rooms = new HashMap<>();
     private final Map<String, ArchivedChatroom> archivedRooms = new HashMap<>();
     private final ArchiveLogger archiveLogger = new ArchiveLogger();
+    private final MessageChecker messageChecker = new MessageChecker();
 
     public ChatroomManager() {
         System.out.println("RoomManager created: " + this);
@@ -125,7 +126,13 @@ public class ChatroomManager {
 
     public boolean addMessage(String roomId, RawMessage rawMessage) {
         Chatroom room = rooms.get(roomId);
-        return room.addRawMessage(rawMessage);
+        if (checkMessageToxicity(rawMessage)) return room.addRawMessage(rawMessage);
+        else return false;
+    }
+
+    private boolean checkMessageToxicity(RawMessage rawMessage) {
+        String message = rawMessage.body();
+        return messageChecker.getToxicityScore(message) <= 0.7;
     }
 
     public String expirationTime(String roomId) {
