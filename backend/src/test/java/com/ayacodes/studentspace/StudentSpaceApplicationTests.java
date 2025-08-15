@@ -51,7 +51,7 @@ class YourApplicationTests {
                         .content("""
                         {
                             "username": "alice",
-                            "topic": "FRIENDSHIP"
+                            "topic": "ACTIVITY10"
                         }
                     """))
                 .andExpect(status().isOk())
@@ -67,7 +67,7 @@ class YourApplicationTests {
                         .content("""
                         {
                             "username": "bob",
-                            "topic": "FRIENDSHIP"
+                            "topic": "ACTIVITY10"
                         }
                     """))
                 .andExpect(status().isOk())
