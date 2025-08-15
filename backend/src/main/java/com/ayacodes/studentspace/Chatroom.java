@@ -15,7 +15,7 @@ public class Chatroom {
     Topic topic;
     public List<Message> messages = new ArrayList<>();
     Boolean isClosed = false;
-    private static final Duration maxTimeOpen = Duration.ofMinutes(20);
+    private static final Duration maxTimeOpen = Duration.ofMinutes(4);
     private Instant chatStartedAt;
     private Instant chatEndedAt;
     private int toxicMessageCount;
@@ -84,11 +84,6 @@ public class Chatroom {
     public boolean isExpired() {
         if (chatStartedAt == null) return false;
         boolean expired = this.timeElapsed().compareTo(maxTimeOpen) > 0;
-        System.out.println("[DEBUG] Room " + roomId
-                + " expired? " + expired
-                + " (Started: " + chatStartedAt
-                + ", Max: " + maxTimeOpen
-                + ", Now: " + Instant.now() + ")");
         if (expired) this.closeRoom();
         return expired;
     }
@@ -121,6 +116,10 @@ public class Chatroom {
             messagesString.append(message.toString());
         }
         return messagesString.toString();
+    }
+
+    public String getTopicName() {
+        return topic.name();
     }
 
     public boolean addRawMessage(RawMessage rawMessage, boolean messageWasFlagged) {

@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +52,7 @@ public class ChatroomManager {
 
     public File generateArchiveLogFile(String roomId) throws IOException {
         ArchivedChatroom archived = archivedRooms.get(roomId);
-        String timestamp = java.time.LocalDateTime.now()
+        String timestamp = LocalDateTime.now()
                 .toString()
                 .replace(":", "-")
                 .replace(".", "-");  // Safe for filenames
@@ -127,13 +128,19 @@ public class ChatroomManager {
 
     public boolean addMessage(String roomId, RawMessage rawMessage) {
         Chatroom room = rooms.get(roomId);
-        boolean flagged = isToxicMessage(rawMessage);
+        boolean flagged = isToxicMessage(rawMessage, room.getTopicName());
         return room.addRawMessage(rawMessage, flagged);
     }
 
-    private boolean isToxicMessage(RawMessage rawMessage) {
+    private boolean isToxicMessage(RawMessage rawMessage, String topicName) {
         String message = rawMessage.body();
-        return messageChecker.getToxicityScore(message) <= 0.7;
+        double toxicityScore = messageChecker.getToxicityScore(message);
+        return switch (topicName) {
+            case "ACTIVITY10" -> false;
+            case "ACTIVITY4" -> toxicityScore >= 0.4;
+            case "ACTIVITY8" -> toxicityScore >= 0.8;
+            default -> throw new IllegalStateException("Could not resolve topic: " + topicName);
+        };
     }
 
     public String expirationTime(String roomId) {
