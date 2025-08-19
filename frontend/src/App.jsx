@@ -7,7 +7,6 @@ import WaitingScreen from "./screens/WaitingScreen.jsx";
 function App() {
     const [screen, setScreen] = useState("start");
     const [nicknameOwn, setNicknameOwn] = useState("");
-    const [nicknameOther, setNicknameOther] = useState("");
     const [topic, setTopic] = useState("");
     const [roomId, setRoomId] = useState(null);
     const [expiresAt, setExpiresAt] = useState('');

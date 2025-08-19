@@ -11,7 +11,13 @@ function Timer({ expiresAt, onExpire }) {
 
         const update = () => {
             const diff = expiresAt - Date.now();
-            setTimeLeft(diff > 0 ? diff : 0);
+            if (diff <= 0) {
+                setTimeLeft(0);
+                if (onExpire) onExpire();
+                clearInterval(interval);
+            } else {
+                setTimeLeft(diff);
+            }
         };
 
         update(); // initial call
