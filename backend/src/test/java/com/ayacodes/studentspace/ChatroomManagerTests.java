@@ -16,11 +16,10 @@ public class ChatroomManagerTests {
         // Create a sample archived chatroom
         ArchivedChatroom archived = new ArchivedChatroom(
                 "room1",
-                Topic.ACTIVITY4,
+                Topic.STRESS,
                 Duration.ofMinutes(30),
                 Instant.parse("2025-07-31T10:00:00Z"),
                 Instant.parse("2025-07-31T10:25:00Z"),
-                new ArrayList<Message>(),
                 2,
                 12,
                 true,
@@ -38,7 +37,7 @@ public class ChatroomManagerTests {
 
         String content = new String(java.nio.file.Files.readAllBytes(logFile.toPath()));
         assertTrue(content.contains("room1"));
-        assertTrue(content.contains("ACTIVITY4"));
+        assertTrue(content.contains("STRESS"));
         assertTrue(content.contains("Final Message Count: 12"));
         assertTrue(content.contains("Report Reason: Inappropriate behavior"));
     }

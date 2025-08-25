@@ -27,15 +27,27 @@ function StartScreen({ onStartChat }) {
                     <select onChange={(e) => setTopic(e.target.value)}
                             required name="topic" id="topic-select" className="form-select">
                         <option value=""></option>
-                        <option value="ACTIVITY4">Activity 4</option>
-                        <option value="ACTIVITY8">Activity 8</option>
-                        <option value="ACTIVITY10">Activity 10</option>
+                        <option value="FRIENDS">Friends</option>
+                        <option value="WORK">Work</option>
+                        <option value="STRESS">Stress</option>
+                        <option value="RELATIONSHIPS">Relationships</option>
+                        <option value="HOBBIES">Hobbies</option>
+                        <option value="MOVIES">Movies</option>
+                        <option value="SHOWS">Shows</option>
+                        <option value="MUSIC">Music</option>
+                        <option value="CODING">Coding</option>
+                        <option value="POLITICS">Politics</option>
+                        <option value="RELIGION">Religion</option>
+                        <option value="PHILOSOPHY">Philosophy</option>
+                        <option value="MOTIVATION">Motivation</option>
+                        <option value="PRODUCTIVITY">Productivity</option>
+                        <option value="SELFHELP">Self Help</option>
                     </select>
                 </div>
 
-                <button type="submit" className="btn btn-primary w-100"> Start Chat </button>
+                <button type="submit" className="btn btn-primary w-100"> Start Chat</button>
             </form>
-        </div>
+    </div>
     );
 }
 

@@ -11,7 +11,6 @@ public record ArchivedChatroom (
         Duration maxTimeOpen,
         Instant chatStartedAt,
         Instant chatEndedAt,
-        List<Message> messages,
         int toxicMessageCount,
         int finalMessageCount,
         boolean closedByUser,

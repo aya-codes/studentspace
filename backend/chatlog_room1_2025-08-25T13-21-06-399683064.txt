@@ -1,0 +1,11 @@
+=== Chatroom: room1 ===
+Topic: STRESS
+Max Time Open: PT30M
+Started At: 2025-07-31T10:00:00Z
+Ended At: 2025-07-31T10:25:00Z
+Toxic Message Count: 2
+Final Message Count: 12
+Closed By User: true
+Report Submitted: true
+Report Reason: Inappropriate behavior
+

@@ -16,11 +16,11 @@ public class ArchivedChatroomTests {
         manager = new ChatroomManager();
         User userAlice = new User();
         userAlice.setUsername("alice");
-        userAlice.setTopic(Topic.ACTIVITY10);
+        userAlice.setTopic(Topic.FRIENDS);
         room = manager.createRoom(userAlice);
         User userBob = new User();
         userBob.setUsername("bob");
-        userBob.setTopic(Topic.ACTIVITY10);
+        userBob.setTopic(Topic.FRIENDS);
         assertTrue(room.addUser(userBob));
         room.addMessage(new Message("alice","1", Instant.now()));
         room.addMessage(new Message("bob","2", Instant.now()));

@@ -16,11 +16,11 @@ public class ChatroomMessagingTests {
         ChatroomManager manager = new ChatroomManager();
         User userAlice = new User();
         userAlice.setUsername("alice");
-        userAlice.setTopic(Topic.ACTIVITY10);
+        userAlice.setTopic(Topic.FRIENDS);
         room = manager.createRoom(userAlice);
         User userBob = new User();
         userBob.setUsername("bob");
-        userBob.setTopic(Topic.ACTIVITY10);
+        userBob.setTopic(Topic.FRIENDS);
         assertTrue(room.addUser(userBob));
     }
 

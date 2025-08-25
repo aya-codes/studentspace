@@ -11,7 +11,7 @@ class ChatroomCreationTests {
         ChatroomManager manager = new ChatroomManager();
         User userAlice = new User();
         userAlice.setUsername("alice");
-        userAlice.setTopic(Topic.ACTIVITY10);
+        userAlice.setTopic(Topic.FRIENDS);
         Chatroom room = manager.createRoom(userAlice);
         assertFalse(room.getAtCapacity());
         assertTrue(room.isAvailable());
@@ -24,21 +24,21 @@ class ChatroomCreationTests {
         ChatroomManager manager = new ChatroomManager();
         User userAlice = new User();
         userAlice.setUsername("alice");
-        userAlice.setTopic(Topic.ACTIVITY10);
+        userAlice.setTopic(Topic.FRIENDS);
         Chatroom room = manager.createRoom(userAlice);
         assertEquals(1, room.getUsers().size());
         assertEquals("alice", room.getUsers().get(0).getUsername());
 
         User userBob = new User();
         userBob.setUsername("bob");
-        userBob.setTopic(Topic.ACTIVITY8); //different activity
+        userBob.setTopic(Topic.WORK); //different activity
         assertFalse(room.addUser(userBob));
         assertFalse(room.getAtCapacity());
         assertTrue(room.isAvailable());
         assertEquals(1, room.getUsers().size());
         assertEquals("alice", room.getUsers().get(0).getUsername());
 
-        userBob.setTopic(Topic.ACTIVITY10);
+        userBob.setTopic(Topic.FRIENDS);
         assertTrue(room.addUser(userBob));
         assertTrue(room.getAtCapacity());
         assertFalse(room.isAvailable());
@@ -50,21 +50,21 @@ class ChatroomCreationTests {
         ChatroomManager manager = new ChatroomManager();
         User userAlice = new User();
         userAlice.setUsername("alice");
-        userAlice.setTopic(Topic.ACTIVITY10);
+        userAlice.setTopic(Topic.FRIENDS);
         Chatroom room = manager.createRoom(userAlice);
         assertEquals(1, room.getUsers().size());
         assertEquals("alice", room.getUsers().get(0).getUsername());
 
         User userBob = new User();
         userBob.setUsername("bob");
-        userBob.setTopic(Topic.ACTIVITY10);
+        userBob.setTopic(Topic.FRIENDS);
         assertTrue(room.addUser(userBob));
         assertEquals(2, room.getUsers().size());
         assertTrue(room.getAtCapacity());
 
         User userTom = new User();
         userTom.setUsername("tom");
-        userTom.setTopic(Topic.ACTIVITY10);
+        userTom.setTopic(Topic.FRIENDS);
         assertFalse(room.addUser(userTom));
         assertEquals(2, room.getUsers().size());
     }
