@@ -39,7 +39,7 @@ function ChatScreen({ roomId, nicknameOwn, topic, expiresAt, onEndChat, onReport
         }
 
         intervalId = setInterval(fetchMessages, 3000);
-        return () => clearInterval(intervalId);  // ✅ now clears the right ID
+        return () => clearInterval(intervalId);
     }, [roomId, chatActive]);
 
 

@@ -90,7 +90,7 @@ function App() {
     const handleEndChat = async () => {
         if (!roomId) return;
         try {
-            const response = await fetch(`${backend}/chat/${roomId}/end`);
+            const RESPONSE = await fetch(`${backend}/chat/${roomId}/end`);
             setScreen("end");
         } catch (err) {
             console.error(err);
@@ -102,7 +102,7 @@ function App() {
         const reason = window.prompt("Enter a reason for reporting:");
         if (!reason) return;
         try {
-            const response = await fetch(`${backend}/chat/${roomId}/report`, {
+            const RESPONSE = await fetch(`${backend}/chat/${roomId}/report`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(reason),
@@ -137,7 +137,6 @@ function App() {
 
     const handleReset = () => {
         setNicknameOwn("");
-        setNicknameOther("");
         setTopic("");
         setRoomId(null);
         setScreen("start");
