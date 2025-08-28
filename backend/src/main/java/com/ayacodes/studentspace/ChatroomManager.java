@@ -134,12 +134,13 @@ public class ChatroomManager {
     private boolean isToxicMessage(RawMessage rawMessage, String topicName) {
         String message = rawMessage.body();
         double toxicityScore = messageChecker.getToxicityScore(message);
-        return switch (topicName) {
-            case "ACTIVITY10" -> false;
-            case "ACTIVITY4" -> toxicityScore >= 0.4;
-            case "ACTIVITY8" -> toxicityScore >= 0.8;
-            default -> throw new IllegalStateException("Could not resolve topic: " + topicName);
-        };
+        return toxicityScore >= 0.8;
+//        return switch (topicName) {
+//            case "ACTIVITY10" -> false;
+//            case "ACTIVITY4" -> toxicityScore >= 0.4;
+//            case "ACTIVITY8" -> toxicityScore >= 0.8;
+//            default -> throw new IllegalStateException("Could not resolve topic: " + topicName);
+//        };
     }
 
     public String expirationTime(String roomId) {
