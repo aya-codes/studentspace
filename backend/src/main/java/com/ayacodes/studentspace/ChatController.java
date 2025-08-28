@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static com.ayacodes.studentspace.RoomStatus.WAITING;
 
-@CrossOrigin(origins = "https://studentspace.onrender.com")
+@CrossOrigin(origins = "https://chatspace.onrender.com")
 @RestController
 public class ChatController {
     private final Queue<User> waitingUsers = new ConcurrentLinkedQueue<>();
