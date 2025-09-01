@@ -55,7 +55,7 @@ public class ChatroomManager {
         String timestamp = LocalDateTime.now()
                 .toString()
                 .replace(":", "-")
-                .replace(".", "-");  // Safe for filenames
+                .replace(".", "-");
 
         String filename = "chatlog_" + roomId + "_" + timestamp + ".txt";
         File file = new File(filename);

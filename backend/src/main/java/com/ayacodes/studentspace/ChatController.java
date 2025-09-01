@@ -47,7 +47,8 @@ public class ChatController {
 
         String roomId = roomManager.findAvailableRoom(user);
         if (roomId == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Failed to assign room"));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to assign room"));
         }
         this.waitingUsers.remove(user);
         Map<String, String> response = new HashMap<>();
